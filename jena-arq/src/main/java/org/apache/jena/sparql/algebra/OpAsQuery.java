@@ -895,6 +895,17 @@ public class OpAsQuery {
         private void push(ElementGroup el) {
             stack.push(el) ;
         }
+
+		@Override
+		public void visit(OpSimJoin opSimJoin) {
+			Element eLeft = asElement(opSimJoin.getLeft()) ;
+            Element eRight = asElementGroup(opSimJoin.getRight()) ;
+            ElementSimJoin elSimJoin = new ElementSimJoin(eRight) ;
+            ElementGroup g = currentGroup() ;
+            if ( !emptyGroup(eLeft) )
+                g.addElement(eLeft) ;
+            g.addElement(elSimJoin) ;
+		}
     }
     
 

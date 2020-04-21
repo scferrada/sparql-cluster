@@ -146,5 +146,10 @@ public class OpWalker
                 op.visit(visitor) ;
             after(op) ;
         }
+
+		@Override
+		public void visit(OpSimJoin opSimJoin) {
+			visit2(opSimJoin);
+		}
     }
 }

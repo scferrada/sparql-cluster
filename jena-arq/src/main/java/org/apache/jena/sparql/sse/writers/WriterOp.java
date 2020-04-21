@@ -557,6 +557,13 @@ public class WriterOp
                 x = Long.toString(value) ;
             out.print(x) ;
         }
+        
+        private void writeDoubleOrDefault(double value) {
+            String x = "_" ;
+            if ( value != Query.NOLIMIT )
+                x = Double.toString(value) ;
+            out.print(x) ;
+        }
 
         private void start(Op op, int newline) {
             WriterLib.start(out, op.getName(), newline) ;
@@ -625,5 +632,10 @@ public class WriterOp
         private void formatTriplePath(TriplePath tp) {
             WriterPath.output(out, tp, sContext) ;
         }
+
+		@Override
+		public void visit(OpSimJoin op) {
+			visitOp2(op, null);
+		}
     }
 }

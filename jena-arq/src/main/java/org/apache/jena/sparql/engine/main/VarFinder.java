@@ -428,5 +428,10 @@ public class VarFinder
             sb.append(", Assign:").append(assignMentions) ;
             return sb.toString() ;
         }
+
+		@Override
+		public void visit(OpSimJoin opSimJoin) {
+			// TODO Auto-generated method stub
+		}
     }
 }

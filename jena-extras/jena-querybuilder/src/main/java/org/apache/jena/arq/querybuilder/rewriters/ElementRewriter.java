@@ -191,4 +191,10 @@ public class ElementRewriter extends AbstractRewriter<Element> implements
 				q, values)));
 	}
 
+	@Override
+	public void visit(ElementSimJoin el) {
+		el.getSimJoinElement().visit(this);
+		push(new ElementSimJoin(getResult()));
+	}
+
 }

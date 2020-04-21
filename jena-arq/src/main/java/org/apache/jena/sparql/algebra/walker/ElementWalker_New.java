@@ -194,5 +194,12 @@ public class ElementWalker_New {
             // XXX XXX Hack for varsMentioned
             eAgg.visit(exprVisitor) ; 
         }
+
+		@Override
+		public void visit(ElementSimJoin el) {
+			 if ( el.getSimJoinElement() != null )
+	                el.getSimJoinElement().visit(this) ;
+	            elementVisitor.visit(el) ;
+		}
     }
 }

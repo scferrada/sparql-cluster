@@ -331,4 +331,11 @@ class ExecutionDispatch implements OpVisitor
             Log.warn(this, "Warning: pop: empty stack") ;
         return stack.pop() ;
     }
+
+	@Override
+	public void visit(OpSimJoin opSimJoin) {
+		QueryIterator input = pop() ;
+        QueryIterator qIter = opExecutor.execute(opSimJoin, input) ;
+        push(qIter) ;
+	}
 }

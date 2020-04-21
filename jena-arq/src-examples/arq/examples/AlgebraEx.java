@@ -1,3 +1,5 @@
+package arq.examples;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,7 +18,6 @@
  * limitations under the License.
  */
 
-package arq.examples;
 
 import org.apache.jena.query.Query ;
 import org.apache.jena.query.QueryFactory ;

@@ -56,6 +56,13 @@ public class SPARQLParserRegistry
             public boolean accept( Syntax syntax ) { return Syntax.syntaxSPARQL_11.equals(syntax) ; } 
             @Override
             public SPARQLParser create( Syntax syntax ) { return new ParserSPARQL11() ; } }) ;
+        
+        reg.add(Syntax.syntaxSPARQL_11sj, 
+                new SPARQLParserFactory() {
+            @Override
+            public boolean accept( Syntax syntax ) { return Syntax.syntaxSPARQL_11sj.equals(syntax) ; } 
+            @Override
+            public SPARQLParser create( Syntax syntax ) { return new ParserSPARQL11SJ() ; } }) ;
    
         reg.add(Syntax.syntaxARQ, 
                 new SPARQLParserFactory() {

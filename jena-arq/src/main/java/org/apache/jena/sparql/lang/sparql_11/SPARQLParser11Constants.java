@@ -410,6 +410,8 @@ public interface SPARQLParser11Constants {
   int PERCENT = 204;
   /** RegularExpression Id. */
   int UNKNOWN = 205;
+  
+  int SIMJOIN = 206;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -622,6 +624,7 @@ public interface SPARQLParser11Constants {
     "<HEX>",
     "<PERCENT>",
     "<UNKNOWN>",
+    "\"simjoin\"",
   };
 
 }

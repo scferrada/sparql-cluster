@@ -25,6 +25,7 @@ import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.sparql.algebra.Algebra ;
 import org.apache.jena.sparql.algebra.Table ;
 import org.apache.jena.sparql.algebra.TableFactory ;
+import org.apache.jena.sparql.algebra.op.OpSimJoin;
 import org.apache.jena.sparql.engine.ExecutionContext ;
 import org.apache.jena.sparql.engine.QueryIterator ;
 import org.apache.jena.sparql.engine.binding.Binding ;
@@ -236,4 +237,10 @@ public class Join {
     //        System.out.println(t4) ;
             return t3.iterator(execCxt) ;
         }
+
+	public static QueryIterator simJoin(QueryIterator left, QueryIterator right, OpSimJoin opSimJoin,
+			ExecutionContext execCxt) {
+
+		return QueryIterSimJoin.create(left, right, opSimJoin, execCxt);
+	}
 }

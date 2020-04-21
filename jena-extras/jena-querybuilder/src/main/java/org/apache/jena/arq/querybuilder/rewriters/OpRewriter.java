@@ -329,4 +329,11 @@ class OpRewriter extends AbstractRewriter<Op> implements OpVisitor {
 		push(new OpTopN(pop(), opTop.getLimit(),
 				expRewriter.rewriteSortConditionList(opTop.getConditions())));
 	}
+
+	@Override
+	public void visit(OpSimJoin opSimJoin) {
+		opSimJoin.getRight().visit(this);
+		opSimJoin.getLeft().visit(this);
+		push(OpSimJoin.create(pop(), pop()));
+	}
 }

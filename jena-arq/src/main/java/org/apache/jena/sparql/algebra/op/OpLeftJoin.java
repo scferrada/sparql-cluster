@@ -72,4 +72,5 @@ public class OpLeftJoin extends Op2
         if ( ! ( op2 instanceof OpLeftJoin) ) return false ;
         return super.sameArgumentsAs((Op2)op2, labelMap) ;
     }
+
 }

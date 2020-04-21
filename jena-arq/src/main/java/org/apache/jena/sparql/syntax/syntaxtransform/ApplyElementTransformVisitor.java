@@ -221,4 +221,14 @@ class ApplyElementTransformVisitor implements ElementVisitor {
             return expr ;
         return ExprTransformer.transform(exprTransform, expr) ;
     }
+
+	@Override
+	public void visit(ElementSimJoin el) {
+		Element elt = el.getSimJoinElement() ;
+        Element elt1 = pop() ;
+        if ( elt == elt1 )
+            push(el) ;
+        else
+            push(new ElementSimJoin(elt1)) ;
+	}
 }

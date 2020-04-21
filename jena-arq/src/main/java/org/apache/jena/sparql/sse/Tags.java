@@ -66,6 +66,9 @@ public class Tags
     public static final String tagProc            = "proc" ;
     public static final String tagPropFunc        = "propfunc" ;
     public static final String tagJoin            = "join" ;
+    public static final String tagSimJoin         = "simjoin" ;
+    public static final String tagKNNSimJoin      = "knn-simjoin" ;
+    public static final String tagRangeSimJoin    = "range-simjoin" ;
     public static final String tagSequence        = "sequence" ;
     public static final String tagDisjunction     = "disjunction" ;
     public static final String tagLeftJoin        = "leftjoin" ;

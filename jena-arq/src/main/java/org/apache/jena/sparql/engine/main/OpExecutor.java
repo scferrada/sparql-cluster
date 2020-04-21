@@ -471,4 +471,11 @@ public class OpExecutor
     private static List<Binding> all(QueryIterator input) {
         return Iter.toList(input) ;
     }
+
+	public QueryIterator execute(OpSimJoin opSimJoin, QueryIterator input) {
+		QueryIterator left = exec(opSimJoin.getLeft(), input) ;
+        QueryIterator right = exec(opSimJoin.getRight(), root()) ;
+        QueryIterator qIter = Join.simJoin(left, right, opSimJoin, execCxt) ;
+        return qIter ;
+	}
 }

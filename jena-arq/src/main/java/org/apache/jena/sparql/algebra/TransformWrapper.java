@@ -108,4 +108,6 @@ public class TransformWrapper implements Transform
     public Op transform(OpSlice opSlice, Op subOp)          { return transform.transform(opSlice, subOp) ; }
     @Override
     public Op transform(OpGroup opGroup, Op subOp)          { return transform.transform(opGroup, subOp) ; }
+	@Override
+	public Op transform(OpSimJoin opSimJoin, Op left, Op right) { return transform.transform(opSimJoin, left, right); }
 }

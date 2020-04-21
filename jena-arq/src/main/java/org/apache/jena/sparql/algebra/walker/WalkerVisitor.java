@@ -298,4 +298,9 @@ public class WalkerVisitor implements OpVisitorByTypeAndExpr, ExprVisitorFunctio
         if ( exprVisitor != null )
             eAgg.visit(exprVisitor) ;
     }
+
+	@Override
+	public void visit(OpSimJoin opSimJoin) {
+		visit2(opSimJoin);
+	}
 }

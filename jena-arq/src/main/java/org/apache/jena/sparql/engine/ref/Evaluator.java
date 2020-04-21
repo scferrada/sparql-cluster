@@ -23,6 +23,7 @@ import java.util.List ;
 import org.apache.jena.graph.Node ;
 import org.apache.jena.query.SortCondition ;
 import org.apache.jena.sparql.algebra.Table ;
+import org.apache.jena.sparql.algebra.op.OpSimJoin;
 import org.apache.jena.sparql.core.BasicPattern ;
 import org.apache.jena.sparql.core.TriplePath ;
 import org.apache.jena.sparql.core.Var ;
@@ -65,4 +66,6 @@ public interface Evaluator
     public Table distinct(Table table) ;
     public Table reduced(Table table) ;
     public Table slice(Table table, long start, long length) ;
+
+	public Table simjoin(Table left, Table right, OpSimJoin op);
 }

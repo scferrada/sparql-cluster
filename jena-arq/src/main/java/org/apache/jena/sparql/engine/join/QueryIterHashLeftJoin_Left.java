@@ -18,7 +18,9 @@
 
 package org.apache.jena.sparql.engine.join;
 
-import java.util.* ;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.logging.Log ;

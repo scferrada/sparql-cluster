@@ -27,6 +27,7 @@ import org.apache.jena.query.ResultSet ;
 import org.apache.jena.query.ResultSetFormatter ;
 import org.apache.jena.query.SortCondition ;
 import org.apache.jena.sparql.algebra.* ;
+import org.apache.jena.sparql.algebra.op.OpSimJoin;
 import org.apache.jena.sparql.algebra.table.TableN ;
 import org.apache.jena.sparql.core.BasicPattern ;
 import org.apache.jena.sparql.core.TriplePath ;
@@ -279,6 +280,15 @@ public class EvaluatorSimple implements Evaluator
         return new TableN(qIter) ;
     }
     
+	private Table simjoinWorker(Table tableLeft, Table tableRight, OpSimJoin op) {
+		QueryIterator left = tableLeft.iterator(execCxt) ;
+		QueryIterator qIter = TableJoin.simJoinWorker(left, tableRight, execCxt) ;
+	    tableLeft.close() ;
+	    tableRight.close() ;
+	        // qIter and left should be properly closed by use or called code. 
+	    return new TableN(qIter) ;
+	}
+    
     // @@ Abstract compatibility
     private Table diffWorker(Table tableLeft, Table tableRight)
     {
@@ -340,4 +350,9 @@ public class EvaluatorSimple implements Evaluator
         ResultSet rs = new ResultSetStream(table.getVarNames(), null, table.iterator(null)) ;
         ResultSetFormatter.out(rs) ;
     }
+
+	@Override
+	public Table simjoin(Table left, Table right, OpSimJoin op) {
+		return simjoinWorker(left, right, op) ;
+	}
 }

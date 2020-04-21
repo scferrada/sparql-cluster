@@ -34,6 +34,7 @@ import org.apache.jena.sparql.algebra.optimize.TransformSimplify ;
 import org.apache.jena.sparql.core.* ;
 import org.apache.jena.sparql.engine.binding.Binding ;
 import org.apache.jena.sparql.expr.* ;
+import org.apache.jena.sparql.lang.sparql_11sj.ParseException;
 import org.apache.jena.sparql.path.PathLib ;
 import org.apache.jena.sparql.syntax.* ;
 import org.apache.jena.sparql.util.Context ;
@@ -91,11 +92,14 @@ public class AlgebraGenerator
      * @param query Query to compile
      * @return Compiled algebra
      */
+    private Query currentQuery = null;
     public Op compile(Query query)
     {
+    	currentQuery = query;
         Op op = compile(query.getQueryPattern()) ;     // Not compileElement - may need to apply simplification.
         
         op = compileModifiers(query, op) ;
+        currentQuery = null;
         return op ;
     }
     
@@ -149,7 +153,6 @@ public class AlgebraGenerator
         
         if ( elt instanceof ElementData )
             return compileElementData((ElementData)elt) ; 
-
         if ( elt == null )
             return OpNull.create() ;
 
@@ -296,7 +299,6 @@ public class AlgebraGenerator
     protected Op compileOneInGroup(Element elt, Op current, Deque<Op> acc)
     {
         // Elements that operate over their left hand size (query syntax). 
-        
         if ( elt instanceof ElementAssign )
         {
             ElementAssign assign = (ElementAssign)elt ;
@@ -320,6 +322,11 @@ public class AlgebraGenerator
             ElementMinus elt2 = (ElementMinus)elt ;
             Op op = compileElementMinus(current, elt2) ;
             return op ;
+        }
+        if ( elt instanceof ElementSimJoin ) {
+        	ElementSimJoin elt2 = (ElementSimJoin) elt;
+        	Op op = compileElementSimJoin(elt2, current, currentQuery);
+        	return op;
         }
 
         // All elements that simply "join" into the algebra.
@@ -442,6 +449,12 @@ public class AlgebraGenerator
         current = OpLeftJoin.create(current, op, exprs) ;
         return current ;
     }
+    
+    protected Op compileElementSimJoin(ElementSimJoin eltSimJoin, Op left, Query q) {
+    	Element subElement = eltSimJoin.getSimJoinElement();
+    	Op right = compile(subElement);
+		return OpSimJoin.create(left, right, q);
+	}
     
     protected Op compileBasicPattern(BasicPattern pattern)
     {
@@ -599,6 +612,8 @@ public class AlgebraGenerator
         // ---- LIMIT/OFFSET
         if ( query.hasLimit() || query.hasOffset() )
             op = new OpSlice(op, query.getOffset() /*start*/, query.getLimit()/*length*/) ;
+        
+        
         
         return op ;
     }

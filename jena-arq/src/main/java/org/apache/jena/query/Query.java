@@ -32,6 +32,7 @@ import org.apache.jena.sparql.core.* ;
 import org.apache.jena.sparql.engine.binding.Binding ;
 import org.apache.jena.sparql.expr.Expr ;
 import org.apache.jena.sparql.expr.ExprAggregator ;
+import org.apache.jena.sparql.expr.ExprList;
 import org.apache.jena.sparql.expr.ExprVar ;
 import org.apache.jena.sparql.expr.aggregate.Aggregator ;
 import org.apache.jena.sparql.serializer.QuerySerializerFactory ;
@@ -84,6 +85,13 @@ public class Query extends Prologue implements Cloneable, Printable
     public static final long  NOLIMIT = Long.MIN_VALUE ;
     private long resultLimit   = NOLIMIT ;
     private long resultOffset  = NOLIMIT ;
+    
+    
+    //SIMILARITY JOIN
+    private boolean similarityJoin = false;
+	private long top = -1;
+	private double within = -1;
+	private String distanceFunction = null;
 
     // ORDER BY
     private List<SortCondition> orderBy       = null ;
@@ -130,6 +138,7 @@ public class Query extends Prologue implements Cloneable, Printable
 
     // Allocate variables that are unique to this query.
     private VarAlloc varAlloc = new VarAlloc(ARQConstants.allocVarMarker) ;
+	
     private Var allocInternVar() { return varAlloc.allocVar() ; }
 
     //private VarAlloc varAnonAlloc = new VarAlloc(ARQConstants.allocVarAnonMarker) ;
@@ -170,6 +179,8 @@ public class Query extends Prologue implements Cloneable, Printable
     public boolean isJsonType()                 { return queryType == QueryType.CONSTRUCT_JSON ; }
 
     public boolean isUnknownType()              { return queryType == QueryType.UNKNOWN ; }
+    
+    public boolean isSimilarityJoin() {return similarityJoin;}
 
     public boolean isConstructQuad() {
         return (isConstructType() && constructTemplate.containsRealQuad())
@@ -789,6 +800,8 @@ public class Query extends Prologue implements Cloneable, Printable
 
     /** Must align with .equals */
     private int hashcode = -1 ;
+	private ExprList leftAttrs;
+	private ExprList rightAttrs;
 
     @Override
     public int hashCode()
@@ -910,4 +923,43 @@ public class Query extends Prologue implements Cloneable, Printable
         QueryVisitor serializer = factory.create(outSyntax, this, writer);
         this.visit(serializer);
     }
+
+	public void setTop(long integerValue) {
+		this.similarityJoin = true;
+		this.top = integerValue;
+	}
+	
+	public int getTop() {
+		return (int) this.top;
+	}
+
+	public void setWithin(double doubleValue) {
+		this.similarityJoin = true;
+		this.within = doubleValue;
+	}
+	
+	public double getWithin() {
+		return this.within;
+	}
+
+	public void setUsing(String distance) {
+		this.distanceFunction = distance;
+	}
+	
+	public String getDistance() {
+		return this.distanceFunction;
+	}
+
+	public void addSimJoinKey(ExprList expr1, ExprList expr2) {
+		this.leftAttrs = expr1;
+		this.rightAttrs = expr2;
+	}
+
+	public ExprList getLeftAttrs() {
+		return this.leftAttrs;
+	}
+	
+	public ExprList getRightAttrs() {
+		return this.rightAttrs;
+	}
 }

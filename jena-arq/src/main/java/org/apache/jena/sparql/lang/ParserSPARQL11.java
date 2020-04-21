@@ -28,6 +28,7 @@ import org.apache.jena.query.QueryParseException ;
 import org.apache.jena.query.Syntax ;
 import org.apache.jena.shared.JenaException ;
 import org.apache.jena.sparql.lang.sparql_11.SPARQLParser11 ;
+import org.apache.jena.sparql.lang.sparql_11sj.SPARQLParser11SJ;
 import org.apache.jena.sparql.syntax.Element ;
 import org.apache.jena.sparql.syntax.Template ;
 
@@ -40,7 +41,6 @@ public class ParserSPARQL11 extends SPARQLParser
     protected Query parse$(final Query query, String queryString)
     {
         query.setSyntax(Syntax.syntaxSPARQL_11) ;
-
         Action action = new Action() {
             @Override
             public void exec(SPARQLParser11 parser) throws Exception
@@ -95,13 +95,13 @@ public class ParserSPARQL11 extends SPARQLParser
             parser.setQuery(query) ;
             action.exec(parser) ;
         }
-        catch (org.apache.jena.sparql.lang.sparql_11.ParseException ex)
+        catch (org.apache.jena.sparql.lang.sparql_11sj.ParseException ex)
         { 
             throw new QueryParseException(ex.getMessage(),
                                           ex.currentToken.beginLine,
                                           ex.currentToken.beginColumn
                                           ) ; }
-        catch (org.apache.jena.sparql.lang.sparql_11.TokenMgrError tErr)
+        catch (org.apache.jena.sparql.lang.sparql_11sj.TokenMgrError tErr)
         {
             // Last valid token : not the same as token error message - but this should not happen
             int col = parser.token.endColumn ;

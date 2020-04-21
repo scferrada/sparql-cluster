@@ -40,6 +40,7 @@ import org.apache.jena.sparql.syntax.ElementNotExists;
 import org.apache.jena.sparql.syntax.ElementOptional;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
 import org.apache.jena.sparql.syntax.ElementService;
+import org.apache.jena.sparql.syntax.ElementSimJoin;
 import org.apache.jena.sparql.syntax.ElementSubQuery;
 import org.apache.jena.sparql.syntax.ElementTriplesBlock;
 import org.apache.jena.sparql.syntax.ElementUnion;
@@ -179,6 +180,12 @@ class QuadIteratorBuilder implements ElementVisitor {
 	public void visit(ElementSubQuery el) {
 		final Query q = el.getQuery();
 		q.getQueryPattern().visit( this );
+	}
+
+
+	@Override
+	public void visit(ElementSimJoin el) {
+		throw new QueryParseException("optional not permitted in data quad", -1, -1) ;
 	}
 
 }

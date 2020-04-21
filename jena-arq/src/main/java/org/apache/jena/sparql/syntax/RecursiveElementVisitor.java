@@ -97,6 +97,10 @@ public class RecursiveElementVisitor implements ElementVisitor
     public void endElement(ElementPathBlock el)     {}
     public void startElement(ElementPathBlock el)   {}
 
+    
+	private void endElement(ElementSimJoin el)   {	}
+	private void startElement(ElementSimJoin el) {	}
+    
     protected ElementVisitor visitor = null ;
     
     // ---- 
@@ -239,4 +243,10 @@ public class RecursiveElementVisitor implements ElementVisitor
         startElement(el) ;
         endElement(el) ;
     }
+	@Override
+	public void visit(ElementSimJoin el) {
+		startElement(el) ;
+        el.getSimJoinElement().visit(this) ;
+        endElement(el) ;
+	}
 }

@@ -33,6 +33,8 @@ public class Syntax extends Symbol
     public static final Syntax syntaxSPARQL_11
                 = new Syntax("http://jena.hpl.hp.com/2003/07/query/SPARQL_11") ;
     
+    public static Syntax syntaxSPARQL_11sj = new Syntax("http://sj.dcc.uchile.cl/algebra");
+    
 //    /** The update syntax that the SPARQL working group has defined */
 //    private static final Syntax syntaxSPARQL_11_Update
 //                = syntaxSPARQL_11 ;
@@ -78,12 +80,16 @@ public class Syntax extends Symbol
         querySyntaxNames.put("sparql_10",   syntaxSPARQL_10) ;
         querySyntaxNames.put("sparql11",   syntaxSPARQL_11) ;
         querySyntaxNames.put("sparql_11",   syntaxSPARQL_11) ;
+        querySyntaxNames.put("sparql11sj",   syntaxSPARQL_11sj) ;
+        querySyntaxNames.put("sparql_11sj",   syntaxSPARQL_11sj) ;
         querySyntaxNames.put("arq",         syntaxARQ) ;
         querySyntaxNames.put("alg",         syntaxAlgebra) ;
         querySyntaxNames.put("op",          syntaxAlgebra) ;
     }
 
     public static TranslationTable<Syntax> updateSyntaxNames = new TranslationTable<>(true) ;
+
+	
     static {
         updateSyntaxNames.put("sparql",      syntaxSPARQL) ;
         updateSyntaxNames.put("sparql_11",   syntaxSPARQL_11) ;
@@ -105,6 +111,7 @@ public class Syntax extends Symbol
         if ( sym.equals(syntaxSPARQL) )      return syntaxSPARQL ;
         if ( sym.equals(syntaxSPARQL_10) )   return syntaxSPARQL_10 ;
         if ( sym.equals(syntaxSPARQL_11) )   return syntaxSPARQL_11 ;
+        if ( sym.equals(syntaxSPARQL_11sj) )   return syntaxSPARQL_11sj ;
         if ( sym.equals(syntaxAlgebra) )     return syntaxAlgebra ;
         return null ;
     }

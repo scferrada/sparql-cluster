@@ -343,4 +343,12 @@ public class EvaluatorDispatch implements OpVisitor
         return stack.pop() ;
     }
 
+	@Override
+	public void visit(OpSimJoin opSimJoin) {
+		Table left = eval(opSimJoin.getLeft()) ;
+        Table right = eval(opSimJoin.getRight()) ;
+        Table table = evaluator.simjoin(left, right, opSimJoin) ;
+        push(table) ;
+	}
+
 }

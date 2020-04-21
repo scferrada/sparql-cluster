@@ -103,4 +103,6 @@ public class TransformBase implements Transform
     public Op transform(OpSlice opSlice, Op subOp)          { return opSlice ; }
     @Override
     public Op transform(OpGroup opGroup, Op subOp)          { return opGroup ; }
+	@Override
+	public Op transform(OpSimJoin opSimJoin, Op left, Op right) { return opSimJoin;	}
 }

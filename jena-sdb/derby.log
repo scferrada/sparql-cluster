@@ -1,0 +1,30 @@
+----------------------------------------------------------------
+Sun Apr 12 18:33:07 CLT 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance a816c00e-0171-7086-60ad-00000a3fae30 
+on database directory C:\Users\scfer\Documents\Universidad\Doctorado\Jena\jena\jena-sdb\target\Derby-test\derby-simple  with class loader sun.misc.Launcher$AppClassLoader@4e25154f 
+Loaded from file:/C:/Users/scfer/.m2/repository/org/apache/derby/derby/10.9.1.0/derby-10.9.1.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_221-b11
+user.dir=C:\Users\scfer\Documents\Universidad\Doctorado\Jena\jena\jena-sdb
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Sun Apr 12 18:33:08 CLT 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance 00cd0029-0171-7086-60ad-00000a3fae30 
+on database directory C:\Users\scfer\Documents\Universidad\Doctorado\Jena\jena\jena-sdb\target\Derby-test\derby-hash  with class loader sun.misc.Launcher$AppClassLoader@4e25154f 
+Loaded from file:/C:/Users/scfer/.m2/repository/org/apache/derby/derby/10.9.1.0/derby-10.9.1.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_221-b11
+user.dir=C:\Users\scfer\Documents\Universidad\Doctorado\Jena\jena\jena-sdb
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Sun Apr 12 18:33:09 CLT 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance 1c16805c-0171-7086-60ad-00000a3fae30 
+on database directory C:\Users\scfer\Documents\Universidad\Doctorado\Jena\jena\jena-sdb\target\Derby-test\derby-index  with class loader sun.misc.Launcher$AppClassLoader@4e25154f 
+Loaded from file:/C:/Users/scfer/.m2/repository/org/apache/derby/derby/10.9.1.0/derby-10.9.1.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_221-b11
+user.dir=C:\Users\scfer\Documents\Universidad\Doctorado\Jena\jena\jena-sdb
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

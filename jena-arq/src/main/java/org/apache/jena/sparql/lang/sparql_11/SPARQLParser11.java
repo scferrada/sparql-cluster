@@ -14,7 +14,7 @@ import org.apache.jena.sparql.modify.request.* ;
 @SuppressWarnings("all")
 public class SPARQLParser11 extends SPARQLParser11Base implements SPARQLParser11Constants {
 
-  final public void QueryUnit() throws ParseException {
+final public void QueryUnit() throws ParseException {
     ByteOrderMark();
     startQuery() ;
     Query();
@@ -1724,6 +1724,7 @@ public class SPARQLParser11 extends SPARQLParser11Base implements SPARQLParser11
       case VALUES:
       case GRAPH:
       case OPTIONAL:
+      case SIMJOIN:
       case MINUS_P:
       case BIND:
       case SERVICE:
@@ -1843,6 +1844,9 @@ public class SPARQLParser11 extends SPARQLParser11Base implements SPARQLParser11
     case OPTIONAL:
       el = OptionalGraphPattern();
       break;
+    case SIMJOIN:
+    	el = SimJoinGraphPattern();
+    	break;
     case MINUS_P:
       el = MinusGraphPattern();
       break;
@@ -1870,7 +1874,16 @@ public class SPARQLParser11 extends SPARQLParser11Base implements SPARQLParser11
     throw new Error("Missing return statement in function");
   }
 
-  final public Element OptionalGraphPattern() throws ParseException {
+  private Element SimJoinGraphPattern() throws ParseException{
+	  System.out.println("IWASHERE");
+	  Element el ;
+	  jj_consume_token(SIMJOIN);
+	  el = GroupGraphPattern();
+	  {if (true) return new ElementSimJoin(el) ;}
+	  throw new Error("Missing return statement in function");
+}
+
+final public Element OptionalGraphPattern() throws ParseException {
                                    Element el ;
     jj_consume_token(OPTIONAL);
     el = GroupGraphPattern();

@@ -34,6 +34,7 @@ import org.apache.jena.sparql.syntax.ElementNotExists;
 import org.apache.jena.sparql.syntax.ElementOptional;
 import org.apache.jena.sparql.syntax.ElementPathBlock;
 import org.apache.jena.sparql.syntax.ElementService;
+import org.apache.jena.sparql.syntax.ElementSimJoin;
 import org.apache.jena.sparql.syntax.ElementSubQuery;
 import org.apache.jena.sparql.syntax.ElementTriplesBlock;
 import org.apache.jena.sparql.syntax.ElementUnion;
@@ -228,6 +229,11 @@ public class BuildElementVisitor implements ElementVisitor {
 		{
 			el.getQuery().setQueryPattern( other.getQuery().getQueryPattern() );
 		}
+		result = el;
+	}
+
+	@Override
+	public void visit(ElementSimJoin el) {
 		result = el;
 	}
 	

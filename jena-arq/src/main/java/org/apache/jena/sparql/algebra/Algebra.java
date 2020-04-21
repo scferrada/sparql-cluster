@@ -19,9 +19,15 @@
 package org.apache.jena.sparql.algebra;
 
 import java.util.Iterator ;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
+import org.apache.jena.atlas.lib.Pair;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.Graph ;
 import org.apache.jena.graph.Node ;
+import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.query.ARQ ;
 import org.apache.jena.query.Dataset ;
 import org.apache.jena.query.Query ;
@@ -39,6 +45,8 @@ import org.apache.jena.sparql.engine.binding.Binding ;
 import org.apache.jena.sparql.engine.binding.BindingFactory ;
 import org.apache.jena.sparql.engine.binding.BindingMap ;
 import org.apache.jena.sparql.engine.binding.BindingRoot ;
+import org.apache.jena.sparql.engine.join.QueryIterSimJoin;
+import org.apache.jena.sparql.engine.join.QueryIterSimJoin.Neighbor;
 import org.apache.jena.sparql.engine.ref.QueryEngineRef ;
 import org.apache.jena.sparql.sse.Item ;
 import org.apache.jena.sparql.sse.SSE ;
@@ -222,4 +230,18 @@ public class Algebra
         }
         return true ;
     }
+
+	public static Binding joinRange(Pair<Pair<Binding, Binding>, Double> pair, Var alloc) {
+		BindingMap b = BindingFactory.create(pair.getLeft().getLeft());
+		b.addAll(pair.getLeft().getRight());
+		b.add(alloc, NodeFactory.createLiteralByValue(pair.getRight(), XSDDatatype.XSDdouble));
+		return b;
+	}
+
+	public static Binding joinKNN(Binding l, Neighbor<Binding> n, Var var) {
+		BindingMap b = BindingFactory.create(l);
+        b.addAll((Binding) n.getKey());
+        b.add(var, NodeFactory.createLiteralByValue(n.getDistance(), XSDDatatype.XSDdouble));
+        return b;
+	}
 }

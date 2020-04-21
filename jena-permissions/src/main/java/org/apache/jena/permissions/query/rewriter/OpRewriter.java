@@ -615,4 +615,10 @@ public class OpRewriter implements OpVisitor {
 		}
 		addOp(quadBlock);
 	}
+
+	@Override
+	public void visit(OpSimJoin opSimJoin) {
+		final OpRewriter rewriter = new OpRewriter(securityEvaluator, graphIRI);
+		addOp(OpSimJoin.create(rewriteOp2(opSimJoin, rewriter), rewriter.getResult()));
+	}
 }

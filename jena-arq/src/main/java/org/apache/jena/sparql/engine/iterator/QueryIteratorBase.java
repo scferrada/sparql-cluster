@@ -92,7 +92,7 @@ public abstract class QueryIteratorBase
     
     // -------- The contract with the subclasses 
 
-    protected boolean isFinished() { return finished ; }
+    public boolean isFinished() { return finished ; }
 
     /** final - subclasses implement hasNextBinding() */
     @Override

@@ -47,4 +47,7 @@ public class OpVisitorByTypeBase extends OpVisitorByType
     protected void visitModifer(OpModifier opMod) 
     { visit1(opMod) ; }
 
+	@Override
+	public void visit(OpSimJoin opSimJoin) {}
+
 }

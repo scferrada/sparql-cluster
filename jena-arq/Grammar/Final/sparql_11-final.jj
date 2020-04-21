@@ -608,7 +608,7 @@ Element GraphPatternNotTriples() : { Element el = null ; }
    el = GroupOrUnionGraphPattern()
  |
    el = OptionalGraphPattern()
- |
+ | 
    el = MinusGraphPattern()
  |
    el = GraphGraphPattern()
@@ -628,6 +628,7 @@ Element OptionalGraphPattern() : { Element el ; }
 { <OPTIONAL> el = GroupGraphPattern()
     { return new ElementOptional(el) ; }
 }
+
 Element GraphGraphPattern() : { Element el ; Node n ;}
 {
   <GRAPH> n = VarOrIri() el = GroupGraphPattern()

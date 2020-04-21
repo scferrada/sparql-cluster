@@ -47,6 +47,7 @@ public interface Transform
 
     // Op2
     public Op transform(OpJoin opJoin, Op left, Op right) ;
+    public Op transform(OpSimJoin opSimJoin, Op left, Op right) ;
     public Op transform(OpLeftJoin opLeftJoin, Op left, Op right) ;
     public Op transform(OpDiff opDiff, Op left, Op right) ;
     public Op transform(OpMinus opMinus, Op left, Op right) ;
