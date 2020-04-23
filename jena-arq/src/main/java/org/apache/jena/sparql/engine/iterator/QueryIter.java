@@ -18,12 +18,18 @@
 
 package org.apache.jena.sparql.engine.iterator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.apache.jena.atlas.io.IndentedWriter ;
+import org.apache.jena.atlas.lib.PairOfSameType;
 import org.apache.jena.sparql.core.Var ;
 import org.apache.jena.sparql.engine.ExecutionContext ;
 import org.apache.jena.sparql.engine.QueryIterator ;
+import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.serializer.SerializationContext ;
 
 /**
@@ -100,4 +106,13 @@ public abstract class QueryIter extends QueryIteratorBase
         if ( tracker != null )
             tracker.closedIterator(this) ;
     }
+
+	public static PairOfSameType<QueryIterator> copy(QueryIterator original) {
+		List<Binding> elements = new ArrayList<Binding>();
+		for ( ; original.hasNext() ; )
+            elements .add(original.nextBinding()) ;
+		QueryIterator copy1 = new QueryIterPlainWrapper(elements.iterator());
+		QueryIterator copy2 = new QueryIterPlainWrapper(elements.stream().collect(Collectors.toList()).iterator());
+		return new PairOfSameType<QueryIterator>(copy1, copy2);
+	}
 }

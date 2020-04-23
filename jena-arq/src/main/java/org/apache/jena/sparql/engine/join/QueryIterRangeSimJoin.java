@@ -20,6 +20,7 @@ public class QueryIterRangeSimJoin extends QueryIterSimJoin {
 		this.leftAttributes = op.getLeftAttributes();
 		this.rightAttributes = op.getRightAttributes();
 		this.distFunc = Distances.getDistance(op.getDistance());
+		this.minMax = op.getMinMax();
 		this.s_countLHS = getLeftRows().size();
 		this.solver = new RangeSimJoinNestedLoopSolver(this);
 		this.solver.setUp();

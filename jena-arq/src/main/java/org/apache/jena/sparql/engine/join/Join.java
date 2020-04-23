@@ -19,9 +19,12 @@
 package org.apache.jena.sparql.engine.join;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List ;
+import java.util.Map;
 
 import org.apache.jena.atlas.iterator.Iter ;
+import org.apache.jena.atlas.lib.PairOfSameType;
 import org.apache.jena.sparql.algebra.Algebra ;
 import org.apache.jena.sparql.algebra.Table ;
 import org.apache.jena.sparql.algebra.TableFactory ;
@@ -29,8 +32,11 @@ import org.apache.jena.sparql.algebra.op.OpSimJoin;
 import org.apache.jena.sparql.engine.ExecutionContext ;
 import org.apache.jena.sparql.engine.QueryIterator ;
 import org.apache.jena.sparql.engine.binding.Binding ;
+import org.apache.jena.sparql.engine.iterator.QueryIter;
 import org.apache.jena.sparql.engine.iterator.QueryIterPlainWrapper ;
+import org.apache.jena.sparql.engine.iterator.QueryIteratorCopy;
 import org.apache.jena.sparql.engine.main.OpExecutor ;
+import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprList ;
 
 /** API to various join algorithms */
@@ -186,7 +192,6 @@ public class Join {
         // Stream from left, materialize right.
         List<Binding> rightRows = Iter.toList(right) ;
         List<Binding> output = new ArrayList<>() ;
-        long count = 0 ;
         for ( ; left.hasNext() ; ) {
             Binding row1 = left.next() ;
             boolean match = false ;
@@ -240,7 +245,43 @@ public class Join {
 
 	public static QueryIterator simJoin(QueryIterator left, QueryIterator right, OpSimJoin opSimJoin,
 			ExecutionContext execCxt) {
+		PairOfSameType<QueryIterator> leftCopy = QueryIter.copy(left);//new QueryIteratorCopy(left);
+		PairOfSameType<QueryIterator> rightCopy = QueryIter.copy(right);//new QueryIteratorCopy(right);
+		PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax = getNormalisationMap(leftCopy.getLeft(), rightCopy.getLeft(), opSimJoin.getLeftAttributes(), opSimJoin.getRightAttributes());
+		opSimJoin.setNormMap(minMax);
+		return QueryIterSimJoin.create(leftCopy.getRight(), rightCopy.getRight(), opSimJoin, execCxt);
+	}
 
-		return QueryIterSimJoin.create(left, right, opSimJoin, execCxt);
+	private static PairOfSameType<Map<Expr, PairOfSameType<Number>>> getNormalisationMap(QueryIterator left, QueryIterator right,
+			ExprList leftAttributes, ExprList rightAttributes) {
+		Map<Expr, PairOfSameType<Number>> resultLeft = new HashMap<Expr, PairOfSameType<Number>>();
+		Map<Expr, PairOfSameType<Number>> resultRight = new HashMap<Expr, PairOfSameType<Number>>();
+			while(left.hasNext()) {
+				Binding current = left.next();
+				for(Expr lexpr : leftAttributes.getList()) {
+					probeToMap(resultLeft, current, lexpr);
+				}
+			}
+			while(right.hasNext()) {
+				Binding current = right.next();
+				for(Expr rexpr : rightAttributes.getList()) {
+					probeToMap(resultRight, current, rexpr);
+				}
+			}
+		return new PairOfSameType<Map<Expr,PairOfSameType<Number>>>(resultLeft, resultRight);
+	}
+
+	private static void probeToMap(Map<Expr, PairOfSameType<Number>> result, Binding current, Expr expr) {
+		Number currentValue = (Number) current.get(expr.asVar()).getLiteralValue();
+		if (!result.containsKey(expr)) {
+			result.put(expr, new PairOfSameType<Number>(currentValue, currentValue));
+			return;
+		}
+		if (currentValue.doubleValue() < result.get(expr).getLeft().doubleValue()) {
+			result.put(expr, new PairOfSameType<Number>(currentValue, result.get(expr).getRight()));
+		}
+		if (currentValue.doubleValue() > result.get(expr).getRight().doubleValue()) {
+			result.put(expr, new PairOfSameType<Number>(result.get(expr).getLeft(), currentValue));
+		}
 	}
 }

@@ -5,9 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.jena.atlas.lib.PairOfSameType;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
+import org.apache.jena.sparql.expr.Expr;
+import org.apache.jena.sparql.expr.ExprList;
 
 import com.eatthepath.jvptree.DistanceFunction;
 
@@ -19,34 +22,39 @@ public class Distances {
 	static {
 		registry.put("manhattan", new DistFunc() {
 			
-			@SuppressWarnings("unchecked")
 			@Override
-			public double distance(Object o1, Object o2) {
-				List<Node> p1 = (List<Node>) o1;
-				List<Node> p2 = (List<Node>) o2;
+			public double distance(List<Node> p1, List<Node> p2, PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax, ExprList leftExpr, ExprList rightExpr) {
 				double d = 0;
 				for (int i = 0; i < p1.size(); i++) {
-					d += Math.abs(
-							(((Number) p1.get(i).getLiteralValue()).doubleValue())
-							- ((Number) p2.get(i).getLiteralValue()).doubleValue()							
-							);
+					Node n1 = p1.get(i);
+					Node n2 = p2.get(i);
+					double maxX = minMax.getLeft().get(leftExpr.get(i)).getRight().doubleValue();
+					double maxY = minMax.getRight().get(rightExpr.get(i)).getRight().doubleValue();
+					double minX = minMax.getLeft().get(leftExpr.get(i)).getLeft().doubleValue();
+					double minY = minMax.getRight().get(rightExpr.get(i)).getLeft().doubleValue();
+					double x = (((Number) n1.getLiteralValue()).doubleValue() - minX)/(maxX-minX);
+					double y = (((Number) n2.getLiteralValue()).doubleValue() - minY)/(maxY-minY);
+					d += Math.abs(x - y);
 				}
 				return d;
 			}
 		});
 		registry.put("euclidean", new DistFunc() {
 			
-			@SuppressWarnings("unchecked")
 			@Override
-			public double distance(Object o1, Object o2) {
-				List<Node> p1 = (List<Node>) o1;
-				List<Node> p2 = (List<Node>) o2;
+			public double distance(List<Node> p1, List<Node> p2, PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax, ExprList leftExpr, ExprList rightExpr) {
 				double d = 0;
 				for (int i = 0; i < p1.size(); i++) {
-					d += Math.pow(
-							(((Number) p1.get(i).getLiteralValue()).doubleValue())
-							- ((Number) p2.get(i).getLiteralValue()).doubleValue()							
-							, 2);
+					Node n1 = p1.get(i);
+					Node n2 = p2.get(i);
+					double maxX = minMax.getLeft().get(leftExpr.get(i)).getRight().doubleValue();
+					double maxY = minMax.getRight().get(rightExpr.get(i)).getRight().doubleValue();
+					double minX = minMax.getLeft().get(leftExpr.get(i)).getLeft().doubleValue();
+					double minY = minMax.getRight().get(rightExpr.get(i)).getLeft().doubleValue();
+					double x = (((Number) n1.getLiteralValue()).doubleValue()- minX)/(maxX-minX);
+					double y = (((Number) n2.getLiteralValue()).doubleValue()- minY)/(maxY-minY);
+					
+					d += (x-y)*(x-y);
 				}
 				return d;
 			}
@@ -54,14 +62,14 @@ public class Distances {
 	}
 
 	public interface DistFunc {
-		public double distance(Object o1, Object o2);
+		public double distance(List<Node> p1, List<Node> p2, PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax, ExprList leftExpr, ExprList rightExpr);
 	}
 	
 	public static DistFunc getDistance(String distance) {
 		return registry.get(distance.toLowerCase());
 	}
 
-	public static DistanceFunction<List<Double>> asVPFunction(DistFunc distFunc) {
+	public static DistanceFunction<List<Double>> asVPFunction(DistFunc distFunc, PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax, ExprList leftExpr, ExprList rightExpr) {
 		DistanceFunction<List<Double>> res = new DistanceFunction<List<Double>>() {
 
 			@Override
@@ -72,13 +80,13 @@ public class Distances {
 					p1.add(NodeFactory.createLiteralByValue(firstPoint.get(i), XSDDatatype.XSDdouble));
 					p2.add(NodeFactory.createLiteralByValue(secondPoint.get(i), XSDDatatype.XSDdouble));
 				}
-				return distFunc.distance(p1, p2);
+				return distFunc.distance(p1, p2, minMax, leftExpr, rightExpr);
 			}
 		};
 		return res;
 	}
 
-	public static Metric getMetric(DistFunc distFunc) {
+	public static Metric getMetric(DistFunc distFunc, PairOfSameType<Map<Expr,PairOfSameType<Number>>> minMax, ExprList leftExpr, ExprList rightExpr) {
 		return new Metric() {
 			
 			List<Node> p1 = new ArrayList<Node>();
@@ -88,7 +96,7 @@ public class Distances {
 			public int distance(int a, int b) {
 				p1.add(NodeFactory.createLiteralByValue(a, XSDDatatype.XSDdouble));
 				p2.add(NodeFactory.createLiteralByValue(b, XSDDatatype.XSDdouble));
-				return (int) distFunc.distance(p1, p2);
+				return (int) distFunc.distance(p1, p2, minMax, leftExpr, rightExpr);
 			}
 			
 			@Override
@@ -97,14 +105,14 @@ public class Distances {
 					p1.add(NodeFactory.createLiteralByValue(a[i], XSDDatatype.XSDdouble));
 					p2.add(NodeFactory.createLiteralByValue(b[i], XSDDatatype.XSDdouble));
 				}
-				return (int) distFunc.distance(p1, p2);
+				return (int) distFunc.distance(p1, p2, minMax, leftExpr, rightExpr);
 			}
 			
 			@Override
 			public double distance(double a, double b) {
 				p1.add(NodeFactory.createLiteralByValue(a, XSDDatatype.XSDdouble));
 				p2.add(NodeFactory.createLiteralByValue(b, XSDDatatype.XSDdouble));
-				return distFunc.distance(p1, p2);
+				return distFunc.distance(p1, p2, minMax, leftExpr, rightExpr);
 			}
 			
 			@Override
@@ -113,7 +121,7 @@ public class Distances {
 					p1.add(NodeFactory.createLiteralByValue(a[i], XSDDatatype.XSDdouble));
 					p2.add(NodeFactory.createLiteralByValue(b[i], XSDDatatype.XSDdouble));
 				}
-				return distFunc.distance(p1, p2);
+				return distFunc.distance(p1, p2, minMax, leftExpr, rightExpr);
 			}
 		};
 	}

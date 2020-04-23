@@ -31,7 +31,7 @@ import org.apache.jena.sparql.serializer.SerializationContext ;
  *  @see QueryIter#materialize
  */  
 
-class QueryIteratorCopy extends QueryIteratorBase
+public class QueryIteratorCopy extends QueryIteratorBase
 {
     // Not tracked.
     List<Binding> elements = new ArrayList<>() ;

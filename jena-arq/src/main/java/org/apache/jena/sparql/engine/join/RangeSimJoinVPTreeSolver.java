@@ -3,8 +3,6 @@ package org.apache.jena.sparql.engine.join;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 import org.apache.jena.atlas.lib.Pair;
 import org.apache.jena.sparql.core.Var;
@@ -72,7 +70,7 @@ public class RangeSimJoinVPTreeSolver extends RangeSimJoinSolver {
 	@Override
 	public void setUp() {
 		List<VPVector<Binding>> data = materialize();
-		fun = Distances.asVPFunction(simjoin.distFunc);
+		fun = Distances.asVPFunction(simjoin.distFunc, simjoin.minMax, simjoin.leftAttributes, simjoin.rightAttributes);
 		index = new VPTree<List<Double>, VPVector<Binding>>(fun, data);
 	}
 

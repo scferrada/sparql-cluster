@@ -4,7 +4,6 @@ import org.apache.jena.sparql.algebra.Op;
 import org.apache.jena.sparql.engine.ExecutionContext;
 import org.apache.jena.sparql.engine.QueryIterator;
 import org.apache.jena.sparql.engine.join.QueryIterRangeSimJoin;
-import org.apache.jena.sparql.engine.join.QueryIterSimJoin;
 import org.apache.jena.sparql.expr.ExprList;
 import org.apache.jena.sparql.sse.Tags;
 
@@ -39,7 +38,6 @@ public class OpRangeSimJoin extends OpSimJoin implements Op {
 
 	@Override
 	public QueryIterator createIterator(QueryIterator left, QueryIterator right, ExecutionContext execCxt) {
-		// TODO Auto-generated method stub
 		return QueryIterRangeSimJoin.createRange(left, right, this, execCxt);
 	}
 

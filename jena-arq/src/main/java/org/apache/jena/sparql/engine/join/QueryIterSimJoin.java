@@ -3,15 +3,18 @@ package org.apache.jena.sparql.engine.join;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.apache.jena.atlas.iterator.Iter;
+import org.apache.jena.atlas.lib.PairOfSameType;
 import org.apache.jena.sparql.algebra.op.OpSimJoin;
 import org.apache.jena.sparql.engine.ExecutionContext;
 import org.apache.jena.sparql.engine.QueryIterator;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.engine.iterator.QueryIter2;
 import org.apache.jena.sparql.engine.join.Distances.DistFunc;
+import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprList;
 
 public abstract class QueryIterSimJoin extends QueryIter2 {
@@ -32,13 +35,13 @@ public abstract class QueryIterSimJoin extends QueryIter2 {
     
     protected Binding slot;
 	protected SimJoinSolver solver;
+	protected PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax;
 
 	public QueryIterSimJoin(QueryIterator left, QueryIterator right, ExecutionContext execCxt) {
 		super(left, right, execCxt);
 	}
 
-	public static QueryIterator create(QueryIterator left, QueryIterator right, OpSimJoin opSimJoin,
-			ExecutionContext execCxt) {
+	public static QueryIterator create(QueryIterator left, QueryIterator right, OpSimJoin opSimJoin, ExecutionContext execCxt) {
 		return opSimJoin.createIterator(left, right, execCxt);
 	}
 	
@@ -128,5 +131,9 @@ public abstract class QueryIterSimJoin extends QueryIter2 {
 
 	public DistFunc getDistFunc() {
 		return distFunc;
+	}
+
+	public PairOfSameType<Map<Expr, PairOfSameType<Number>>> getMinMax() {
+		return minMax;
 	}
 }

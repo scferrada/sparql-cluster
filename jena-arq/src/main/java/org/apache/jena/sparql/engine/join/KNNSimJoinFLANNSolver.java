@@ -28,7 +28,7 @@ public class KNNSimJoinFLANNSolver extends KNNSimJoinSolver {
 	public void setUp() {
 		materialise();
 		QueryIterKNNSimJoin knnsimjoin = (QueryIterKNNSimJoin) simjoin;
-		Metric metric = Distances.getMetric(knnsimjoin.distFunc);
+		Metric metric = Distances.getMetric(knnsimjoin.distFunc, knnsimjoin.minMax, knnsimjoin.leftAttributes, knnsimjoin.rightAttributes);
         IndexKDTree.BuildParams buildParams = new IndexKDTree.BuildParams(4);
         index = new IndexKDTree(metric, data, buildParams);
         index.buildIndex();

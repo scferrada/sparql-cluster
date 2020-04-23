@@ -2,8 +2,6 @@ package org.apache.jena.sparql.engine.join;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 import org.apache.jena.atlas.lib.Pair;
 import org.apache.jena.graph.Node;
@@ -32,7 +30,7 @@ public class RangeSimJoinNestedLoopSolver extends RangeSimJoinSolver {
 		    for (Expr v: simjoin.getRightAttributes().getListRaw()) {
 		        rvals.add(r.get(v.asVar()));
 		    }
-		    double d = simjoin.getDistFunc().distance(lvals, rvals);
+		    double d = simjoin.getDistFunc().distance(lvals, rvals, simjoin.minMax, simjoin.leftAttributes, simjoin.rightAttributes);
 		    if (d==0 && sameObject(lvals, rvals)) {
 					continue;
 			}

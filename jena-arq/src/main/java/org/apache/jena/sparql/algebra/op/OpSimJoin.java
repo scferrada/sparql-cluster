@@ -1,14 +1,16 @@
 package org.apache.jena.sparql.algebra.op;
 
+import java.util.Map;
+
+import org.apache.jena.atlas.lib.PairOfSameType;
 import org.apache.jena.query.Query;
 import org.apache.jena.sparql.algebra.Op;
 import org.apache.jena.sparql.algebra.OpVisitor;
 import org.apache.jena.sparql.algebra.Transform;
 import org.apache.jena.sparql.engine.ExecutionContext;
 import org.apache.jena.sparql.engine.QueryIterator;
+import org.apache.jena.sparql.expr.Expr;
 import org.apache.jena.sparql.expr.ExprList;
-import org.apache.jena.sparql.sse.Tags;
-import org.apache.jena.sparql.syntax.ElementSimJoin;
 import org.apache.jena.sparql.util.NodeIsomorphismMap;
 
 public abstract class OpSimJoin extends Op2 {
@@ -16,6 +18,7 @@ public abstract class OpSimJoin extends Op2 {
 	protected String distance;
 	protected ExprList leftAttributes;
 	protected ExprList rightAttributes;
+	private PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax;
 
 	protected OpSimJoin(Op left, Op right) {
 		super(left, right);
@@ -89,4 +92,12 @@ public abstract class OpSimJoin extends Op2 {
 
 	public abstract QueryIterator createIterator(QueryIterator left, QueryIterator right, ExecutionContext execCxt);
 
+	public void setNormMap(PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax) {
+		this.minMax = minMax;
+	}
+	
+
+	public PairOfSameType<Map<Expr, PairOfSameType<Number>>> getMinMax() {
+		return minMax;
+	}
 }

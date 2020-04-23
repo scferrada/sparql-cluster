@@ -2,8 +2,6 @@ package org.apache.jena.sparql.engine.join;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.engine.binding.Binding;
@@ -22,7 +20,7 @@ public class KNNSimJoinNestedLoopSolver extends KNNSimJoinSolver {
 
 	@Override
 	protected void getNextBatch(Binding l) {
-		QueryIterKNNSimJoin knnSimJoin = (QueryIterKNNSimJoin) this.simjoin;
+		QueryIterKNNSimJoin knnSimJoin = (QueryIterKNNSimJoin) simjoin;
 		List<Node> lvals = new ArrayList<>();
 		for (Expr v: knnSimJoin.getLeftAttributes().getListRaw()) {
 		    lvals.add(l.get(v.asVar()));
@@ -33,7 +31,7 @@ public class KNNSimJoinNestedLoopSolver extends KNNSimJoinSolver {
 		    for (Expr v: knnSimJoin.getRightAttributes().getListRaw()) {
 		        rvals.add(r.get(v.asVar()));
 		    }
-		    double d = this.simjoin.getDistFunc().distance(lvals, rvals);
+		    double d = simjoin.getDistFunc().distance(lvals, rvals, simjoin.getMinMax(), simjoin.leftAttributes, simjoin.rightAttributes);
 		    if (d == 0 && sameObject(lvals, rvals)) {
 					continue;
 			}

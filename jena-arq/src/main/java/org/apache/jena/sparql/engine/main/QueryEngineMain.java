@@ -86,7 +86,6 @@ public class QueryEngineMain extends QueryEngineBase
         @Override
         public Plan create(Query query, DatasetGraph dataset, Binding input, Context context)
         {
-        	System.out.println(this.getClass() + ".create()");
             QueryEngineMain engine = new QueryEngineMain(query, dataset, input, context) ;
             return engine.getPlan() ;
         }

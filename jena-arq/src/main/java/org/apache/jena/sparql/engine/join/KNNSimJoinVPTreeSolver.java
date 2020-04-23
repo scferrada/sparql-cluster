@@ -3,8 +3,6 @@ package org.apache.jena.sparql.engine.join;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.binding.Binding;
@@ -33,7 +31,7 @@ public class KNNSimJoinVPTreeSolver extends KNNSimJoinSolver {
 	@Override
 	public void setUp() {
 		List<VPVector<Binding>> data = materialize();
-		fun = Distances.asVPFunction(simjoin.distFunc);
+		fun = Distances.asVPFunction(simjoin.distFunc, simjoin.minMax, simjoin.leftAttributes, simjoin.rightAttributes);
 		index = new VPTree<List<Double>, VPVector<Binding>>(fun, data);
 	}
 
@@ -72,7 +70,8 @@ public class KNNSimJoinVPTreeSolver extends KNNSimJoinSolver {
 
 	private List<VPVector<Binding>> materialize() {
 		List<VPVector<Binding>> res = new LinkedList<>();
-		for (Binding b = bindingIterator.next(); bindingIterator.hasNext(); b = bindingIterator.next()) {
+		while(bindingIterator.hasNext()) {
+			Binding b = bindingIterator.next();
 			List<Double> row = new LinkedList<>();
 			for (Expr v : simjoin.getRightAttributes()) {
 				row.add(((Number) b.get(v.asVar()).getLiteralValue()).doubleValue());
