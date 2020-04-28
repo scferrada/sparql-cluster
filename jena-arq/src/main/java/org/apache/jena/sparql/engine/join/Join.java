@@ -32,6 +32,7 @@ import org.apache.jena.sparql.algebra.op.OpSimJoin;
 import org.apache.jena.sparql.engine.ExecutionContext ;
 import org.apache.jena.sparql.engine.QueryIterator ;
 import org.apache.jena.sparql.engine.binding.Binding ;
+import org.apache.jena.sparql.engine.iterator.BufferedQueryIteratorFactory;
 import org.apache.jena.sparql.engine.iterator.QueryIter;
 import org.apache.jena.sparql.engine.iterator.QueryIterPlainWrapper ;
 import org.apache.jena.sparql.engine.iterator.QueryIteratorCopy;
@@ -118,8 +119,7 @@ public class Join {
      * @return          QueryIterator
      */
     public static QueryIterator hashJoin(QueryIterator left, QueryIterator right, ExecutionContext execCxt) {
-        //return new QueryIterNestedLoopJoin(left, right, conditions, execCxt) ;
-        return QueryIterHashJoin.create(left, right, execCxt) ;
+    	return QueryIterHashJoin.create(left, right, execCxt) ;
     }
 
     /** Evaluate using a hash join.
@@ -245,11 +245,12 @@ public class Join {
 
 	public static QueryIterator simJoin(QueryIterator left, QueryIterator right, OpSimJoin opSimJoin,
 			ExecutionContext execCxt) {
-		PairOfSameType<QueryIterator> leftCopy = QueryIter.copy(left);//new QueryIteratorCopy(left);
-		PairOfSameType<QueryIterator> rightCopy = QueryIter.copy(right);//new QueryIteratorCopy(right);
-		PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax = getNormalisationMap(leftCopy.getLeft(), rightCopy.getLeft(), opSimJoin.getLeftAttributes(), opSimJoin.getRightAttributes());
+		BufferedQueryIteratorFactory leftFactory = new BufferedQueryIteratorFactory(left);
+		BufferedQueryIteratorFactory rightFactory = new BufferedQueryIteratorFactory(right);
+		PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax = getNormalisationMap(leftFactory.createBufferedQueryIterator(),
+				rightFactory.createBufferedQueryIterator(), opSimJoin.getLeftAttributes(), opSimJoin.getRightAttributes());
 		opSimJoin.setNormMap(minMax);
-		return QueryIterSimJoin.create(leftCopy.getRight(), rightCopy.getRight(), opSimJoin, execCxt);
+		return QueryIterSimJoin.create(leftFactory.createBufferedQueryIterator(), rightFactory.createBufferedQueryIterator(), opSimJoin, execCxt);
 	}
 
 	private static PairOfSameType<Map<Expr, PairOfSameType<Number>>> getNormalisationMap(QueryIterator left, QueryIterator right,

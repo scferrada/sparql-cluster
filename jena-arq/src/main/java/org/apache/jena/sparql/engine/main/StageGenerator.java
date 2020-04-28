@@ -46,4 +46,12 @@ public interface StageGenerator
     public QueryIterator execute(BasicPattern pattern, 
                                  QueryIterator input,
                                  ExecutionContext execCxt) ;
+
+	public default QueryIterator executeWithRP(BasicPattern pattern, QueryIterator input, ExecutionContext execCxt) {
+		return null;
+	}
+
+	public default QueryIterator executeWithOverlap(BasicPattern pattern, QueryIterator input, ExecutionContext execCxt) {
+		return null;
+	}
 }

@@ -21,6 +21,8 @@ package org.apache.jena.graph;
 import java.io.IOException;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -108,6 +110,14 @@ public class Triple implements Serializable
         
     public boolean isConcrete()
         { return subj.isConcrete() && pred.isConcrete() && obj.isConcrete(); }
+    
+    public List<String> getVars(){
+    	List<String> vars = new ArrayList<String>();
+    	if(subj.isVariable()) vars.add(subj.getName());
+    	if(pred.isVariable()) vars.add(pred.getName());
+    	if(obj.isVariable()) vars.add(obj.getName());
+    	return vars;
+    }
         
     /** 
          Answer true if <code>o</code> is a Triple with the same subject, predicate,

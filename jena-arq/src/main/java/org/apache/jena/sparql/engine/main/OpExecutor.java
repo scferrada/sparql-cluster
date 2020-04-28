@@ -128,7 +128,16 @@ public class OpExecutor
 
     protected QueryIterator execute(OpBGP opBGP, QueryIterator input) {
         BasicPattern pattern = opBGP.getPattern() ;
-        QueryIterator qIter = stageGenerator.execute(pattern, input, execCxt) ;
+        QueryIterator qIter;
+        if (optimiseOverlappingPatterns && execCxt.getContext().isDefined(Symbol.create("RIGHT_PATTERN"))) {
+        	if (execCxt.getContext().isDefined(Symbol.create("OVERLAP_ITERATOR"))) {
+				qIter = stageGenerator.executeWithOverlap(pattern, input, execCxt);
+			} else {
+				qIter = stageGenerator.executeWithRP(pattern, input, execCxt) ;
+			}
+		} else {
+			qIter = stageGenerator.execute(pattern, input, execCxt) ;
+		}
         if (hideBNodeVars)
             qIter = new QueryIterDistinguishedVars(qIter, execCxt) ;
         return qIter ;

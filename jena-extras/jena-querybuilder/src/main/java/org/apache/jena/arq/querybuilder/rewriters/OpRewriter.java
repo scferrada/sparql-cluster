@@ -334,6 +334,6 @@ class OpRewriter extends AbstractRewriter<Op> implements OpVisitor {
 	public void visit(OpSimJoin opSimJoin) {
 		opSimJoin.getRight().visit(this);
 		opSimJoin.getLeft().visit(this);
-		push(OpSimJoin.create(pop(), pop()));
+		push(OpSimJoin.create(pop(), pop(), null));
 	}
 }
