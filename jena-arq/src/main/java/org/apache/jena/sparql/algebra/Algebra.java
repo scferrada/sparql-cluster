@@ -88,7 +88,7 @@ public class Algebra
     {
         if ( elt == null )
             return null ;
-        return new AlgebraGenerator().compile(elt) ;
+        return new AlgebraGenerator().compile(elt, null) ;
     }
 
     /** Turn an algebra expression into quadpattern form */

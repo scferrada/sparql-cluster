@@ -92,14 +92,10 @@ public class AlgebraGenerator
      * @param query Query to compile
      * @return Compiled algebra
      */
-    private Query currentQuery = null;
     public Op compile(Query query)
     {
-    	currentQuery = query;
-        Op op = compile(query.getQueryPattern()) ;     // Not compileElement - may need to apply simplification.
-        
+        Op op = compile(query.getQueryPattern(), query) ;     // Not compileElement - may need to apply simplification.
         op = compileModifiers(query, op) ;
-        currentQuery = null;
         return op ;
     }
     
@@ -108,11 +104,12 @@ public class AlgebraGenerator
     /**
      * Compile any structural element
      * @param elt Element
+     * @param query 
      * @return Compiled algebra
      */
-    public Op compile(Element elt)
+    public Op compile(Element elt, Query query)
     {
-        Op op = compileElement(elt) ;
+        Op op = compileElement(elt, query) ;
         Op op2 = op ;
         if ( ! simplifyTooEarlyInAlgebraGeneration && applySimplification && simplify != null )
             op2 = simplify(op) ;
@@ -125,10 +122,10 @@ public class AlgebraGenerator
     }
 
     // This is the operation to call for recursive application.
-    protected Op compileElement(Element elt)
+    protected Op compileElement(Element elt, Query query)
     {
         if ( elt instanceof ElementGroup )
-            return compileElementGroup((ElementGroup)elt) ;
+            return compileElementGroup((ElementGroup)elt, query) ;
       
         if ( elt instanceof ElementUnion )
             return compileElementUnion((ElementUnion)elt) ;
@@ -191,7 +188,7 @@ public class AlgebraGenerator
     //   (join Z (filter...)) that in turn stops the filter getting moved into the LeftJoin.  
     //   It need a depth of 2 or more {{ }} for this to happen. 
     
-    protected Op compileElementGroup(ElementGroup groupElt)
+    protected Op compileElementGroup(ElementGroup groupElt, Query query)
     {
         Pair<List<Expr>, List<Element>> pair = prepareGroup(groupElt) ;
         List<Expr> filters = pair.getLeft() ;
@@ -206,7 +203,7 @@ public class AlgebraGenerator
         {
             if ( elt != null )
             {
-                current = compileOneInGroup( elt, current, acc );
+                current = compileOneInGroup( elt, current, acc, query );
             }
         }
         
@@ -296,7 +293,7 @@ public class AlgebraGenerator
         return Pair.create(filters, groupElts) ;
     }
     
-    protected Op compileOneInGroup(Element elt, Op current, Deque<Op> acc)
+    protected Op compileOneInGroup(Element elt, Op current, Deque<Op> acc, Query query)
     {
         // Elements that operate over their left hand size (query syntax). 
         if ( elt instanceof ElementAssign )
@@ -325,7 +322,7 @@ public class AlgebraGenerator
         }
         if ( elt instanceof ElementSimJoin ) {
         	ElementSimJoin elt2 = (ElementSimJoin) elt;
-        	Op op = compileElementSimJoin(elt2, current, currentQuery);
+        	Op op = compileElementSimJoin(elt2, current, query);
         	return op;
         }
 
@@ -340,7 +337,7 @@ public class AlgebraGenerator
              elt instanceof ElementPathBlock
             )
         {
-            Op op = compileElement(elt) ;
+            Op op = compileElement(elt, query) ;
             return join(current, op) ;
         }
         
@@ -389,7 +386,7 @@ public class AlgebraGenerator
         
         for ( Element subElt: el.getElements() )
         {
-            Op op = compileElement(subElt) ;
+            Op op = compileElement(subElt, null) ;
             current = union(current, op) ;
         }
         return current ;
@@ -397,7 +394,7 @@ public class AlgebraGenerator
 
     protected Op compileElementNotExists(Op current, ElementNotExists elt2)
     {
-        Op op = compile(elt2.getElement()) ;    // "compile", not "compileElement" -- do simpliifcation  
+        Op op = compile(elt2.getElement(), null) ;    // "compile", not "compileElement" -- do simpliifcation  
         Expr expr = new E_Exists(elt2, op) ;
         expr = new E_LogicalNot(expr) ;
         return OpFilter.filter(expr, current) ;
@@ -405,14 +402,14 @@ public class AlgebraGenerator
 
     protected Op compileElementExists(Op current, ElementExists elt2)
     {
-        Op op = compile(elt2.getElement()) ;    // "compile", not "compileElement" -- do simpliifcation 
+        Op op = compile(elt2.getElement(), null) ;    // "compile", not "compileElement" -- do simpliifcation 
         Expr expr = new E_Exists(elt2, op) ;
         return OpFilter.filter(expr, current) ;
     }
 
     protected Op compileElementMinus(Op current, ElementMinus elt2)
     {
-        Op op = compile(elt2.getMinusElement()) ;
+        Op op = compile(elt2.getMinusElement(), null) ;
         Op opMinus = OpMinus.create(current, op) ;
         return opMinus ;
     }
@@ -425,7 +422,7 @@ public class AlgebraGenerator
     protected Op compileElementUnion(Op current, ElementUnion elt2)
     {
         // Special SPARQL 1.1 case.
-        Op op = compile(elt2.getElements().get(0)) ;
+        Op op = compile(elt2.getElements().get(0), null) ;
         Op opUnion = OpUnion.create(current, op) ;
         return opUnion ;
     }
@@ -433,7 +430,7 @@ public class AlgebraGenerator
     protected Op compileElementOptional(ElementOptional eltOpt, Op current)
     {
         Element subElt = eltOpt.getOptionalElement() ;
-        Op op = compileElement(subElt) ;
+        Op op = compileElement(subElt, null) ;
         
         ExprList exprs = null ;
         if ( op instanceof OpFilter )
@@ -452,7 +449,7 @@ public class AlgebraGenerator
     
     protected Op compileElementSimJoin(ElementSimJoin eltSimJoin, Op left, Query q) {
     	Element subElement = eltSimJoin.getSimJoinElement();
-    	Op right = compile(subElement);
+    	Op right = compile(subElement, q);
 		return OpSimJoin.create(left, right, q);
 	}
     
@@ -474,14 +471,14 @@ public class AlgebraGenerator
     protected Op compileElementGraph(ElementNamedGraph eltGraph)
     {
         Node graphNode = eltGraph.getGraphNameNode() ;
-        Op sub = compileElement(eltGraph.getElement()) ;
+        Op sub = compileElement(eltGraph.getElement(), null) ;
         return new OpGraph(graphNode, sub) ;
     }
 
     protected Op compileElementService(ElementService eltService)
     {
         Node serviceNode = eltService.getServiceNode() ;
-        Op sub = compileElement(eltService.getElement()) ;
+        Op sub = compileElement(eltService.getElement(), null) ;
         return new OpService(serviceNode, sub, eltService, eltService.getSilent()) ;
     }
     
