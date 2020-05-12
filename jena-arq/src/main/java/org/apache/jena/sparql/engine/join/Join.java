@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List ;
 import java.util.Map;
 
+import javax.sound.midi.Soundbank;
+
 import org.apache.jena.atlas.iterator.Iter ;
 import org.apache.jena.atlas.lib.PairOfSameType;
 import org.apache.jena.sparql.algebra.Algebra ;
@@ -234,12 +236,6 @@ public class Join {
             System.out.println(t2) ;
             System.out.println("** ") ;
             System.out.println(t3) ;
-    //        // Could do again here, different algoithm for comparison.
-    //        left = t1.iterator(execCxt) ;
-    //        right = t2.iterator(execCxt) ;
-    //        System.out.println("** nestedLoopJoin") ;
-    //        Table t4 = TableFactory.create(?????) ;
-    //        System.out.println(t4) ;
             return t3.iterator(execCxt) ;
         }
 
@@ -257,18 +253,18 @@ public class Join {
 			ExprList leftAttributes, ExprList rightAttributes) {
 		Map<Expr, PairOfSameType<Number>> resultLeft = new HashMap<Expr, PairOfSameType<Number>>();
 		Map<Expr, PairOfSameType<Number>> resultRight = new HashMap<Expr, PairOfSameType<Number>>();
-			while(left.hasNext()) {
-				Binding current = left.next();
-				for(Expr lexpr : leftAttributes.getList()) {
-					probeToMap(resultLeft, current, lexpr);
-				}
+		for(;left.hasNext();) {
+			Binding current = left.nextBinding();
+			for(Expr lexpr : leftAttributes.getList()) {
+				probeToMap(resultLeft, current, lexpr);
 			}
-			while(right.hasNext()) {
-				Binding current = right.next();
-				for(Expr rexpr : rightAttributes.getList()) {
-					probeToMap(resultRight, current, rexpr);
-				}
+		}
+		for(;right.hasNext();) {
+			Binding current = right.nextBinding();
+			for(Expr rexpr : rightAttributes.getList()) {
+				probeToMap(resultRight, current, rexpr);
 			}
+		}
 		return new PairOfSameType<Map<Expr,PairOfSameType<Number>>>(resultLeft, resultRight);
 	}
 

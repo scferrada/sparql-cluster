@@ -559,9 +559,10 @@ Element OptionalGraphPattern() : { Element el ; }
     { return new ElementOptional(el) ; }
 }
 Element SimJoinGraphPattern() : { Element el ; }
-{ <SIMJOIN> (TopClause() | WithinClause())
-SimUsingClause()
+{ <SIMJOIN>
 SimOnClause()
+(TopClause() | WithinClause())
+SimUsingClause()
 el = GroupGraphPattern()
     { return new ElementSimJoin(el) ; }
 }
@@ -578,13 +579,18 @@ void WithinClause() : { Token t ; }
 void SimUsingClause() : { Token t;}
 {
   < USING > t = < STRING_LITERAL1 >
+  SimDistanceBinding()
   { getQuery().setUsing(t.image) ;}
+}
+void SimDistanceBinding() : { Var t;}
+{
+  < AS > t = Var()
+  { getQuery().setDistVar(t);}
 }
 void SimOnClause() : { }
 {
   <ON> SimJoinCondition()
 }
-
 void SimJoinCondition() :
 { ExprList expr1 = null ; ExprList expr2 = null; }
 {

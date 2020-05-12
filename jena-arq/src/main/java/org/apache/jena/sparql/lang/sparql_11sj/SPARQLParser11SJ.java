@@ -1883,6 +1883,7 @@ public class SPARQLParser11SJ extends SPARQLParser11SJBase implements SPARQLPars
   final public Element SimJoinGraphPattern() throws ParseException {
                                   Element el ;
     jj_consume_token(SIMJOIN);
+    SimOnClause();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case TOP:
       TopClause();
@@ -1896,7 +1897,6 @@ public class SPARQLParser11SJ extends SPARQLParser11SJBase implements SPARQLPars
       throw new ParseException();
     }
     SimUsingClause();
-    SimOnClause();
     el = GroupGraphPattern();
       {if (true) return new ElementSimJoin(el) ;}
     throw new Error("Missing return statement in function");
@@ -1920,7 +1920,15 @@ public class SPARQLParser11SJ extends SPARQLParser11SJBase implements SPARQLPars
                           Token t;
     jj_consume_token(USING);
     t = jj_consume_token(STRING_LITERAL1);
-    getQuery().setUsing(t.image.substring(1, t.image.length()-1)) ;
+    SimDistanceBinding();
+    getQuery().setUsing(t.image) ;
+  }
+
+  final public void SimDistanceBinding() throws ParseException {
+                              Var t;
+    jj_consume_token(AS);
+    t = Var();
+    getQuery().setDistVar(t);
   }
 
   final public void SimOnClause() throws ParseException {

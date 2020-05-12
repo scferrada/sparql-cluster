@@ -284,11 +284,11 @@ public class FmtUtils
             return ;
         }
 
-        if ( datatype != null )
-        {
-            result.append("^^") ;
-            stringForURI( result, datatype, context );
-        }
+//        if ( datatype != null )
+//        {
+//            result.append("^^") ;
+//            stringForURI( result, datatype, context );
+//        }
     }
 
     public static String stringForString(String str)
@@ -390,9 +390,9 @@ public class FmtUtils
 
 	static public void stringForURI(StringBuilder target, String uri)
 	{
-		target.append("<");
+		target.append("\"<");
 		stringEsc(target, uri);
-		target.append(">");
+		target.append(">\"");
 	}
 
 
@@ -447,9 +447,9 @@ public class FmtUtils
         {
             String x = abbrevByBase(uri, base) ;
             if ( x != null ) {
-                result.append("<");
+                result.append("\"<");
                 result.append(x);
-                result.append(">");
+                result.append(">\"");
                 return;
             }
         }

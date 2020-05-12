@@ -141,7 +141,7 @@ abstract public class BindingBase implements Binding
 
     // Do one level of binding
     public void format1(StringBuffer sbuff) {
-        String sep = "";
+        String sep = " {";
         for ( Iterator<Var> iter = vars1() ; iter.hasNext() ; ) {
             Object obj = iter.next();
             Var var = (Var)obj;
@@ -150,12 +150,14 @@ abstract public class BindingBase implements Binding
             sep = " ";
             format(sbuff, var);
         }
+        sbuff.deleteCharAt(sbuff.length()-1);
+        sbuff.append("} ");
     }
 
     protected void format(StringBuffer sbuff, Var var) {
         Node node = get(var);
         String tmp = FmtUtils.stringForObject(node);
-        sbuff.append("( ?" + var.getVarName() + " = " + tmp + " )");
+        sbuff.append("\""+var.getVarName()+"\"" + " : " + tmp + " ,");
     }
 
     // Do one level of binding

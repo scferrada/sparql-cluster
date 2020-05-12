@@ -120,8 +120,9 @@ public abstract class QueryIterSimJoin extends QueryIter2 {
 	}
 	
 	public List<Binding> getRightRows() {
-		if (rightRows == null)	
+		if (rightRows == null) {
 			rightRows = Iter.toList(getRight());
+		}
 		return rightRows;
 	}
 

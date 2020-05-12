@@ -44,21 +44,18 @@ public class KNNSimJoinVPTreeSolver extends KNNSimJoinSolver {
 			lvals.add(((Number) l.get(v.asVar()).getLiteralValue()).doubleValue());
 		}
 		VPVector<Binding> query = new VPVector<>(l, lvals);
-		List<VPVector<Binding>> res = index.getNearestNeighbors(query, knnSimJoin.getK());
-		for (int j = 0; j < knnSimJoin.getK(); j++) {
-			if (sameObject(l, res.get(j).key)) {
-				continue;
-			}
-			Binding r = res.get(j).key;
-			double d = fun.getDistance(query, res.get(j));
-			cache.add(new Neighbor<Binding>(r, d));
+		List<VPVector<Binding>> res = index.getNearestNeighbors(query, knnSimJoin.getK()+1);
+		for (VPVector<Binding> r : res) {
+			double d = fun.getDistance(query, r);
+			if(d==0) continue;
+			cache.add(new Neighbor<Binding>(r.key, d));
 		}
 	}
 
 	private boolean sameObject(Binding l, Binding r) {
 		Iterator<Var> lvars = l.vars();
 		Iterator<Var> rvars = r.vars();
-		while (lvars.hasNext()) {
+		while (lvars.hasNext() && rvars.hasNext()) {
 			Var lv = lvars.next();
 			Var rv = rvars.next();
 			if (!l.get(lv).equals(r.get(rv))) {

@@ -50,7 +50,8 @@ public class QueryIterPlainWrapper extends QueryIter
     public void setIterator(Iterator<Binding> iterator) { this.iterator = iterator ; }
     
     @Override
-    protected boolean hasNextBinding() { return iterator.hasNext() ; } 
+    protected boolean hasNextBinding() { 
+    	return iterator.hasNext() ; } 
     
     @Override
     protected Binding moveToNextBinding() { return iterator.next() ; }

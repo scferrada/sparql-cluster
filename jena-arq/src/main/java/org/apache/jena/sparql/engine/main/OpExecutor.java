@@ -99,7 +99,7 @@ public class OpExecutor
     protected int                  level      = TOP_LEVEL - 1 ;
     private final boolean          hideBNodeVars ;
     protected final StageGenerator stageGenerator ;
-    private boolean optimiseOverlappingPatterns = false;
+    public static boolean optimiseOverlappingPatterns = false;
 
     protected OpExecutor(ExecutionContext execCxt)
     {

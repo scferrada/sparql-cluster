@@ -629,8 +629,6 @@ public class Query extends Prologue implements Cloneable, Printable
 
     private static void checkDataBlock(List<Var> variables, List<Binding> values)
     {
-        // Check.
-        int N = variables.size() ;
         for ( Binding valueRow : values )
         {
             Iterator<Var> iter= valueRow.vars() ;
@@ -802,6 +800,7 @@ public class Query extends Prologue implements Cloneable, Printable
     private int hashcode = -1 ;
 	private ExprList leftAttrs;
 	private ExprList rightAttrs;
+	private Var distVar;
 
     @Override
     public int hashCode()
@@ -948,6 +947,14 @@ public class Query extends Prologue implements Cloneable, Printable
 	
 	public String getDistance() {
 		return this.distanceFunction;
+	}
+	
+	public void setDistVar(Var v) {
+		this.distVar = v;
+	}
+	
+	public Var getDistVar() {
+		return this.distVar;
 	}
 
 	public void addSimJoinKey(ExprList expr1, ExprList expr2) {

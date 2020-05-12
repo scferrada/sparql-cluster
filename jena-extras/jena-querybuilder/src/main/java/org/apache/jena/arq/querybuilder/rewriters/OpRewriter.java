@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.jena.graph.Node ;
+import org.apache.jena.query.Query;
 import org.apache.jena.query.SortCondition ;
 import org.apache.jena.sparql.algebra.Op ;
 import org.apache.jena.sparql.algebra.OpVisitor ;
@@ -334,6 +335,6 @@ class OpRewriter extends AbstractRewriter<Op> implements OpVisitor {
 	public void visit(OpSimJoin opSimJoin) {
 		opSimJoin.getRight().visit(this);
 		opSimJoin.getLeft().visit(this);
-		push(OpSimJoin.create(pop(), pop(), null));
+		push(OpSimJoin.create(pop(), pop(), new Query()));
 	}
 }

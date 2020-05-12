@@ -26,7 +26,7 @@ public abstract class OpSimJoin extends Op2 {
 
 	public OpSimJoin(Op left, Op right, String distance, ExprList leftAttrs, ExprList rightAttrs) {
 		super(left, right);
-		this.distance = distance;
+		this.distance = distance.replace("'", "");
 		this.leftAttributes = leftAttrs;
 		this.rightAttributes = rightAttrs;
 	}
@@ -53,7 +53,7 @@ public abstract class OpSimJoin extends Op2 {
 	}
 
 	public static Op create(Op left, Op right, Query q) {
-		if (!q.isSimilarityJoin()) {
+		if (q==null || !q.isSimilarityJoin()) {
 			return null;
 		}
 		String distance = q.getDistance();
