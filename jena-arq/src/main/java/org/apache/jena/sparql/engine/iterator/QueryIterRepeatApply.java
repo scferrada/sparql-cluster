@@ -63,7 +63,6 @@ public abstract class QueryIterRepeatApply extends QueryIter1
         {
             if ( currentStage == null  )
                 currentStage = makeNextStage() ;
-            
             if ( currentStage == null  )
                 return false ;
             

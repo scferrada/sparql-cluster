@@ -20,8 +20,10 @@ package org.apache.jena.sparql.engine.join;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List ;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.sound.midi.Soundbank;
 
@@ -245,8 +247,25 @@ public class Join {
 		BufferedQueryIteratorFactory rightFactory = new BufferedQueryIteratorFactory(right);
 		PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax = getNormalisationMap(leftFactory.createBufferedQueryIterator(),
 				rightFactory.createBufferedQueryIterator(), opSimJoin.getLeftAttributes(), opSimJoin.getRightAttributes());
-		opSimJoin.setNormMap(minMax);
+		Map<Expr, PairOfSameType<Number>> condensedMinMax = condense(minMax);
+		opSimJoin.setNormMap(condensedMinMax);
 		return QueryIterSimJoin.create(leftFactory.createBufferedQueryIterator(), rightFactory.createBufferedQueryIterator(), opSimJoin, execCxt);
+	}
+
+	private static Map<Expr, PairOfSameType<Number>> condense(
+			PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax) {
+		Map<Expr, PairOfSameType<Number>> res = new HashMap<Expr, PairOfSameType<Number>>();
+		Iterator<Entry<Expr, PairOfSameType<Number>>> leftIter = minMax.getLeft().entrySet().iterator();
+		Iterator<Entry<Expr, PairOfSameType<Number>>> rightIter = minMax.getRight().entrySet().iterator();
+		while (leftIter.hasNext() && rightIter.hasNext()) {
+			Entry<Expr, PairOfSameType<Number>> left = leftIter.next();
+			Entry<Expr, PairOfSameType<Number>> right = rightIter.next();
+			PairOfSameType<Number> pair = new PairOfSameType<Number>(
+					Math.min(left.getValue().getLeft().doubleValue(), right.getValue().getLeft().doubleValue()),
+					Math.max(left.getValue().getRight().doubleValue(), right.getValue().getRight().doubleValue()));
+			res.put(left.getKey(), pair);
+		}
+		return res;
 	}
 
 	private static PairOfSameType<Map<Expr, PairOfSameType<Number>>> getNormalisationMap(QueryIterator left, QueryIterator right,

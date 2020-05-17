@@ -23,17 +23,15 @@ public class Distances {
 		registry.put("manhattan", new DistFunc() {
 			
 			@Override
-			public double distance(List<Node> p1, List<Node> p2, PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax, ExprList leftExpr, ExprList rightExpr) {
+			public double distance(List<Node> p1, List<Node> p2, Map<Expr, PairOfSameType<Number>> minMax, ExprList leftExpr, ExprList rightExpr) {
 				double d = 0.0;
 				for (int i = 0; i < p1.size(); i++) {
 					Node n1 = p1.get(i);
 					Node n2 = p2.get(i);
-					double maxX = minMax.getLeft().get(leftExpr.get(i)).getRight().doubleValue();
-					double maxY = minMax.getRight().get(rightExpr.get(i)).getRight().doubleValue();
-					double minX = minMax.getLeft().get(leftExpr.get(i)).getLeft().doubleValue();
-					double minY = minMax.getRight().get(rightExpr.get(i)).getLeft().doubleValue();
+					double maxX = minMax.get(leftExpr.get(i)).getRight().doubleValue();
+					double minX = minMax.get(leftExpr.get(i)).getLeft().doubleValue();
 					double x = (((Number) n1.getLiteralValue()).doubleValue() - minX)/(maxX-minX);
-					double y = (((Number) n2.getLiteralValue()).doubleValue() - minY)/(maxY-minY);
+					double y = (((Number) n2.getLiteralValue()).doubleValue() - minX)/(maxX-minX);
 					d += Math.abs(x - y);
 				}
 				return d;
@@ -42,17 +40,15 @@ public class Distances {
 		registry.put("euclidean", new DistFunc() {
 			
 			@Override
-			public double distance(List<Node> p1, List<Node> p2, PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax, ExprList leftExpr, ExprList rightExpr) {
+			public double distance(List<Node> p1, List<Node> p2, Map<Expr, PairOfSameType<Number>> minMax, ExprList leftExpr, ExprList rightExpr) {
 				double d = 0;
 				for (int i = 0; i < p1.size(); i++) {
 					Node n1 = p1.get(i);
 					Node n2 = p2.get(i);
-					double maxX = minMax.getLeft().get(leftExpr.get(i)).getRight().doubleValue();
-					double maxY = minMax.getRight().get(rightExpr.get(i)).getRight().doubleValue();
-					double minX = minMax.getLeft().get(leftExpr.get(i)).getLeft().doubleValue();
-					double minY = minMax.getRight().get(rightExpr.get(i)).getLeft().doubleValue();
-					double x = (((Number) n1.getLiteralValue()).doubleValue()- minX)/(maxX-minX);
-					double y = (((Number) n2.getLiteralValue()).doubleValue()- minY)/(maxY-minY);
+					double maxX = minMax.get(leftExpr.get(i)).getRight().doubleValue();
+					double minX = minMax.get(leftExpr.get(i)).getLeft().doubleValue();
+					double x = (((Number) n1.getLiteralValue()).doubleValue() - minX)/(maxX-minX);
+					double y = (((Number) n2.getLiteralValue()).doubleValue() - minX)/(maxX-minX);
 					
 					d += (x-y)*(x-y);
 				}
@@ -62,14 +58,14 @@ public class Distances {
 	}
 
 	public interface DistFunc {
-		public double distance(List<Node> p1, List<Node> p2, PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax, ExprList leftExpr, ExprList rightExpr);
+		public double distance(List<Node> p1, List<Node> p2, Map<Expr, PairOfSameType<Number>> minMax, ExprList leftExpr, ExprList rightExpr);
 	}
 	
 	public static DistFunc getDistance(String distance) {
 		return registry.get(distance.toLowerCase());
 	}
 
-	public static DistanceFunction<List<Double>> asVPFunction(DistFunc distFunc, PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax, ExprList leftExpr, ExprList rightExpr) {
+	public static DistanceFunction<List<Double>> asVPFunction(DistFunc distFunc, Map<Expr, PairOfSameType<Number>> minMax, ExprList leftExpr, ExprList rightExpr) {
 		DistanceFunction<List<Double>> res = new DistanceFunction<List<Double>>() {
 
 			@Override
@@ -86,7 +82,7 @@ public class Distances {
 		return res;
 	}
 
-	public static Metric getMetric(DistFunc distFunc, PairOfSameType<Map<Expr,PairOfSameType<Number>>> minMax, ExprList leftExpr, ExprList rightExpr) {
+	public static Metric getMetric(DistFunc distFunc, Map<Expr,PairOfSameType<Number>> minMax, ExprList leftExpr, ExprList rightExpr) {
 		return new Metric() {
 			
 			List<Node> p1 = new ArrayList<Node>();

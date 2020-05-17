@@ -145,12 +145,12 @@ abstract public class BindingBase implements Binding
         for ( Iterator<Var> iter = vars1() ; iter.hasNext() ; ) {
             Object obj = iter.next();
             Var var = (Var)obj;
-
             sbuff.append(sep);
             sep = " ";
             format(sbuff, var);
         }
-        sbuff.deleteCharAt(sbuff.length()-1);
+        if (sbuff.length()>0)
+        	sbuff.deleteCharAt(sbuff.length()-1);
         sbuff.append("} ");
     }
 

@@ -35,7 +35,7 @@ public abstract class QueryIterSimJoin extends QueryIter2 {
     
     protected Binding slot;
 	protected SimJoinSolver solver;
-	protected PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax;
+	protected Map<Expr, PairOfSameType<Number>> minMax;
 
 	public QueryIterSimJoin(QueryIterator left, QueryIterator right, ExecutionContext execCxt) {
 		super(left, right, execCxt);
@@ -90,7 +90,6 @@ public abstract class QueryIterSimJoin extends QueryIter2 {
 
 	@Override
 	protected Binding moveToNextBinding() {
-		if (!hasNextBinding()) return null;
 		Binding x = slot;
 		slot = null;
 		return x;
@@ -134,7 +133,7 @@ public abstract class QueryIterSimJoin extends QueryIter2 {
 		return distFunc;
 	}
 
-	public PairOfSameType<Map<Expr, PairOfSameType<Number>>> getMinMax() {
+	public Map<Expr, PairOfSameType<Number>> getMinMax() {
 		return minMax;
 	}
 }

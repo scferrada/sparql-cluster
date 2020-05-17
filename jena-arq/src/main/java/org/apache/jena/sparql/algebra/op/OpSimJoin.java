@@ -18,7 +18,7 @@ public abstract class OpSimJoin extends Op2 {
 	protected String distance;
 	protected ExprList leftAttributes;
 	protected ExprList rightAttributes;
-	private PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax;
+	private Map<Expr, PairOfSameType<Number>> minMax;
 
 	protected OpSimJoin(Op left, Op right) {
 		super(left, right);
@@ -92,12 +92,12 @@ public abstract class OpSimJoin extends Op2 {
 
 	public abstract QueryIterator createIterator(QueryIterator left, QueryIterator right, ExecutionContext execCxt);
 
-	public void setNormMap(PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax) {
-		this.minMax = minMax;
+	public void setNormMap(Map<Expr, PairOfSameType<Number>> condensedMinMax) {
+		this.minMax = condensedMinMax;
 	}
 	
 
-	public PairOfSameType<Map<Expr, PairOfSameType<Number>>> getMinMax() {
+	public Map<Expr, PairOfSameType<Number>> getMinMax() {
 		return minMax;
 	}
 }

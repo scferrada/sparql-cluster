@@ -229,8 +229,11 @@ public class FmtUtils
                 {
                     try {
                         // BigDecimal does allow a leading +
-                        new java.math.BigDecimal(s) ;
-                        result.append(s);
+                    	String s1 = s ;
+                    	if ( s.startsWith("+") )
+                            s1 = s.substring(1) ;
+                        new java.math.BigDecimal(s1) ;
+                        result.append(s1);
                         return;
                     } catch (NumberFormatException nfe) {}
                     // No luck.  Continue.

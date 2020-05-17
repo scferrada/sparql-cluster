@@ -239,7 +239,8 @@ public class Algebra
 	}
 
 	public static Binding joinKNN(Binding l, Neighbor<Binding> n, Var var) {
-		BindingMap b = BindingFactory.create(l);
+		BindingMap b = BindingFactory.create();
+		b.addAll(l);
         b.addAll((Binding) n.getKey());
         b.add(var, NodeFactory.createLiteralByValue(n.getDistance(), XSDDatatype.XSDdouble));
         return b;

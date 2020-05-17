@@ -170,6 +170,7 @@ public class Service {
         String uri = op.getService().getURI();
         HttpQuery httpQuery = configureQuery(uri, context, query);
         QueryIterator qIter;
+        System.out.println(httpQuery);
         try (InputStream in = httpQuery.exec()) {
             // Read the whole of the results now.
             // Avoids the problems with calling back into the same system e.g.
@@ -221,7 +222,7 @@ public class Service {
 
         // configure the query object.
         httpQuery.merge(QueryEngineHTTP.getServiceParams(uri, context));
-        httpQuery.addParam(HttpParams.pQuery, query.toString());
+        httpQuery.addParam(HttpParams.pQuery, query.toString().replace("\"", ""));
         httpQuery.setAllowCompression(context.isTrueOrUndef(queryCompression));
 
         HttpClient client = context.get(queryClient);

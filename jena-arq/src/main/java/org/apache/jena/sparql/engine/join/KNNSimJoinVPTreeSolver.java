@@ -47,7 +47,7 @@ public class KNNSimJoinVPTreeSolver extends KNNSimJoinSolver {
 		List<VPVector<Binding>> res = index.getNearestNeighbors(query, knnSimJoin.getK()+1);
 		for (VPVector<Binding> r : res) {
 			double d = fun.getDistance(query, r);
-			if(d==0) continue;
+			if(d==0 && sameObject(l, r.key)) continue;
 			cache.add(new Neighbor<Binding>(r.key, d));
 		}
 	}
