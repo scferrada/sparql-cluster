@@ -85,11 +85,10 @@ public class Distances {
 	public static Metric getMetric(DistFunc distFunc, Map<Expr,PairOfSameType<Number>> minMax, ExprList leftExpr, ExprList rightExpr) {
 		return new Metric() {
 			
-			List<Node> p1 = new ArrayList<Node>();
-			List<Node> p2 = new ArrayList<Node>();
-			
 			@Override
 			public int distance(int a, int b) {
+				List<Node> p1 = new ArrayList<Node>();
+				List<Node> p2 = new ArrayList<Node>();
 				p1.add(NodeFactory.createLiteralByValue(a, XSDDatatype.XSDdouble));
 				p2.add(NodeFactory.createLiteralByValue(b, XSDDatatype.XSDdouble));
 				return (int) distFunc.distance(p1, p2, minMax, leftExpr, rightExpr);
@@ -97,6 +96,8 @@ public class Distances {
 			
 			@Override
 			public int distance(int[] a, int[] b) {
+				List<Node> p1 = new ArrayList<Node>();
+				List<Node> p2 = new ArrayList<Node>();
 				for (int i = 0; i < a.length; i++) {
 					p1.add(NodeFactory.createLiteralByValue(a[i], XSDDatatype.XSDdouble));
 					p2.add(NodeFactory.createLiteralByValue(b[i], XSDDatatype.XSDdouble));
@@ -106,6 +107,8 @@ public class Distances {
 			
 			@Override
 			public double distance(double a, double b) {
+				List<Node> p1 = new ArrayList<Node>();
+				List<Node> p2 = new ArrayList<Node>();
 				p1.add(NodeFactory.createLiteralByValue(a, XSDDatatype.XSDdouble));
 				p2.add(NodeFactory.createLiteralByValue(b, XSDDatatype.XSDdouble));
 				return distFunc.distance(p1, p2, minMax, leftExpr, rightExpr);
@@ -113,6 +116,8 @@ public class Distances {
 			
 			@Override
 			public double distance(double[] a, double[] b) {
+				List<Node> p1 = new ArrayList<Node>();
+				List<Node> p2 = new ArrayList<Node>();
 				for (int i = 0; i < a.length; i++) {
 					p1.add(NodeFactory.createLiteralByValue(a[i], XSDDatatype.XSDdouble));
 					p2.add(NodeFactory.createLiteralByValue(b[i], XSDDatatype.XSDdouble));

@@ -33,7 +33,7 @@ public class KNNSimJoinNestedLoopSolver extends KNNSimJoinSolver {
 		    }
 		    double d = simjoin.getDistFunc().distance(lvals, rvals, simjoin.getMinMax(), simjoin.leftAttributes, simjoin.rightAttributes);
 		    if (d == 0 && sameObject(lvals, rvals)) {
-					continue;
+				continue;
 			}
 		    if (cache.size() < knnSimJoin.getK()){
 		    	cache.add(new Neighbor<Binding>(r, d));

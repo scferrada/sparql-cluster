@@ -34,7 +34,7 @@ public class KNNSimJoinFLANNSolver extends KNNSimJoinSolver {
         index.buildIndex();
         searchParams2 = new IndexKDTree.SearchParams();
         searchParams2.eps = 0.0f;
-        searchParams2.maxNeighbors = knnsimjoin.getK()+1;
+        searchParams2.maxNeighbors = knnsimjoin.getK();
         searchParams2.checks = 128;
 	}
 
@@ -56,15 +56,15 @@ public class KNNSimJoinFLANNSolver extends KNNSimJoinSolver {
 		QueryIterKNNSimJoin knnsimjoin = (QueryIterKNNSimJoin) simjoin;
         int[][] indices = new int[1][knnsimjoin.getK()];
         double[][] distances = new double[1][knnsimjoin.getK()];
-            List<Double> lvals = new LinkedList<>();
-            for (Expr v : knnsimjoin.getLeftAttributes().getListRaw()) {
-                lvals.add(((Number)l.get(v.asVar()).getLiteralValue()).doubleValue());
-            }
-            double[][] query = new double[1][lvals.size()];
-            query[0] = lvals.stream().mapToDouble(Double::doubleValue).toArray();
-            index.knnSearch(query, indices, distances, searchParams2);
-            for(int j=0; j<knnsimjoin.getK(); j++){
-                cache.add(new Neighbor<>(rightRows.get(indices[0][j]), distances[0][j]));
-            }       
+        List<Double> lvals = new LinkedList<>();
+        for (Expr v : knnsimjoin.getLeftAttributes().getListRaw()) {
+            lvals.add(((Number)l.get(v.asVar()).getLiteralValue()).doubleValue());
+        }
+        double[][] query = new double[1][lvals.size()];
+        query[0] = lvals.stream().mapToDouble(Double::doubleValue).toArray();
+        index.knnSearch(query, indices, distances, searchParams2);
+        for(int j=0; j<knnsimjoin.getK(); j++){
+            cache.add(new Neighbor<>(rightRows.get(indices[0][j]), distances[0][j]));
+        }       
 	}
 }

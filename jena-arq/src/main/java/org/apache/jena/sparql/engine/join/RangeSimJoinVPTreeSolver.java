@@ -33,11 +33,11 @@ public class RangeSimJoinVPTreeSolver extends RangeSimJoinSolver {
 		VPVector<Binding> query = new VPVector<>(l, lvals);
 		List<VPVector<Binding>> res = index.getAllWithinDistance(query, rangeSimJoin.getRadius());
 		for (VPVector<Binding> r : res) {
-			if (sameObject(l, r.getKey())) {
-				continue;
-			}
 			Binding b = r.getKey();
 			double d = fun.getDistance(query, r);
+			if (d==0) {
+				continue;
+			}
 			cache.add(new Pair<Pair<Binding, Binding>, Double>(new Pair<Binding, Binding>(l, b), d));
 		}
 	}

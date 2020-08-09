@@ -79,7 +79,6 @@ public class QueryIterNestedLoopJoin extends QueryIter2 {
     protected Binding moveToNextBindingOrNull() {
         if ( isFinished() )
             return null;
-
         for ( ;; ) { // For rows from the right.
             if ( rowRight == null ) {
                 if ( right.hasNext() ) {

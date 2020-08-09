@@ -17,12 +17,12 @@ public class QueryIterRangeSimJoin extends QueryIterSimJoin {
 	private QueryIterRangeSimJoin(QueryIterator left, QueryIterator right, OpRangeSimJoin op, ExecutionContext execCxt) {
 		super(left, right, execCxt);
 		this.radius = op.getWithin();
+		System.out.println("range sim join within "+this.radius);
 		this.leftAttributes = op.getLeftAttributes();
 		this.rightAttributes = op.getRightAttributes();
 		this.distFunc = Distances.getDistance(op.getDistance());
 		this.minMax = op.getMinMax();
-		this.s_countLHS = getLeftRows().size();
-		this.solver = new RangeSimJoinNestedLoopSolver(this);
+		this.solver = new RangeSimJoinVPTreeSolver(this);
 		this.solver.setUp();
 	}
 
