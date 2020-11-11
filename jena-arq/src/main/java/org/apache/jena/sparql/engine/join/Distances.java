@@ -14,8 +14,6 @@ import org.apache.jena.sparql.expr.ExprList;
 
 import com.eatthepath.jvptree.DistanceFunction;
 
-import flann.metric.Metric;
-
 public class Distances {
 	
 	private static Map<String, DistFunc> registry = new HashMap<String, Distances.DistFunc>();
@@ -45,10 +43,10 @@ public class Distances {
 				for (int i = 0; i < p1.size(); i++) {
 					Node n1 = p1.get(i);
 					Node n2 = p2.get(i);
-					//double maxX = minMax.get(leftExpr.get(i)).getRight().doubleValue();
-					//double minX = minMax.get(leftExpr.get(i)).getLeft().doubleValue();
-					double x = (((Number) n1.getLiteralValue()).doubleValue()); //- minX)/(maxX-minX);
-					double y = (((Number) n2.getLiteralValue()).doubleValue()); //- minX)/(maxX-minX);
+					double maxX = minMax.get(leftExpr.get(i)).getRight().doubleValue();
+					double minX = minMax.get(leftExpr.get(i)).getLeft().doubleValue();
+					double x = (((Number) n1.getLiteralValue()).doubleValue()- minX)/(maxX-minX);
+					double y = (((Number) n2.getLiteralValue()).doubleValue()- minX)/(maxX-minX);
 					
 					d += (x-y)*(x-y);
 				}
@@ -80,51 +78,6 @@ public class Distances {
 			}
 		};
 		return res;
-	}
-
-	public static Metric getMetric(DistFunc distFunc, Map<Expr,PairOfSameType<Number>> minMax, ExprList leftExpr, ExprList rightExpr) {
-		return new Metric() {
-			
-			@Override
-			public int distance(int a, int b) {
-				List<Node> p1 = new ArrayList<Node>();
-				List<Node> p2 = new ArrayList<Node>();
-				p1.add(NodeFactory.createLiteralByValue(a, XSDDatatype.XSDdouble));
-				p2.add(NodeFactory.createLiteralByValue(b, XSDDatatype.XSDdouble));
-				return (int) distFunc.distance(p1, p2, minMax, leftExpr, rightExpr);
-			}
-			
-			@Override
-			public int distance(int[] a, int[] b) {
-				List<Node> p1 = new ArrayList<Node>();
-				List<Node> p2 = new ArrayList<Node>();
-				for (int i = 0; i < a.length; i++) {
-					p1.add(NodeFactory.createLiteralByValue(a[i], XSDDatatype.XSDdouble));
-					p2.add(NodeFactory.createLiteralByValue(b[i], XSDDatatype.XSDdouble));
-				}
-				return (int) distFunc.distance(p1, p2, minMax, leftExpr, rightExpr);
-			}
-			
-			@Override
-			public double distance(double a, double b) {
-				List<Node> p1 = new ArrayList<Node>();
-				List<Node> p2 = new ArrayList<Node>();
-				p1.add(NodeFactory.createLiteralByValue(a, XSDDatatype.XSDdouble));
-				p2.add(NodeFactory.createLiteralByValue(b, XSDDatatype.XSDdouble));
-				return distFunc.distance(p1, p2, minMax, leftExpr, rightExpr);
-			}
-			
-			@Override
-			public double distance(double[] a, double[] b) {
-				List<Node> p1 = new ArrayList<Node>();
-				List<Node> p2 = new ArrayList<Node>();
-				for (int i = 0; i < a.length; i++) {
-					p1.add(NodeFactory.createLiteralByValue(a[i], XSDDatatype.XSDdouble));
-					p2.add(NodeFactory.createLiteralByValue(b[i], XSDDatatype.XSDdouble));
-				}
-				return distFunc.distance(p1, p2, minMax, leftExpr, rightExpr);
-			}
-		};
 	}
 
 }

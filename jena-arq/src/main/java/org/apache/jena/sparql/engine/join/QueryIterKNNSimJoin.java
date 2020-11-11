@@ -22,7 +22,7 @@ public class QueryIterKNNSimJoin extends QueryIterSimJoin {
 		this.rightAttributes = opKNNSimJoin.getRightAttributes();
 		this.distFunc = Distances.getDistance(opKNNSimJoin.getDistance());
 		this.minMax= opKNNSimJoin.getMinMax();
-		this.solver = new KNNSimJoinNestedLoopSolver(this);
+		this.solver = new KNNSimJoinVPTreeSolver(this);
 		solver.setUp();
 	}
 

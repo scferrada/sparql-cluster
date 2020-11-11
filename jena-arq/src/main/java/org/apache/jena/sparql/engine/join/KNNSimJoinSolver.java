@@ -29,7 +29,8 @@ public abstract class KNNSimJoinSolver extends SimJoinSolver {
 
 	@Override
 	public boolean hasNextBinding() {
-		return (!cache.isEmpty()) || simjoin.getLeft().hasNext();
+		boolean b = (!cache.isEmpty()) || simjoin.getLeft().hasNext();
+		return b;
 	}
 
 }

@@ -243,13 +243,13 @@ public class Join {
 
 	public static QueryIterator simJoin(QueryIterator left, QueryIterator right, OpSimJoin opSimJoin,
 			ExecutionContext execCxt) {
-		//BufferedQueryIteratorFactory leftFactory = new BufferedQueryIteratorFactory(left);
-		//BufferedQueryIteratorFactory rightFactory = new BufferedQueryIteratorFactory(right);
-		//PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax = getNormalisationMap(leftFactory.createBufferedQueryIterator(),
-		//		rightFactory.createBufferedQueryIterator(), opSimJoin.getLeftAttributes(), opSimJoin.getRightAttributes());
-		//Map<Expr, PairOfSameType<Number>> condensedMinMax = condense(minMax);
-		//opSimJoin.setNormMap(condensedMinMax);
-		return QueryIterSimJoin.create(left, right, opSimJoin, execCxt);
+		BufferedQueryIteratorFactory leftFactory = new BufferedQueryIteratorFactory(left);
+		BufferedQueryIteratorFactory rightFactory = new BufferedQueryIteratorFactory(right);
+		PairOfSameType<Map<Expr, PairOfSameType<Number>>> minMax = getNormalisationMap(leftFactory.createBufferedQueryIterator(),
+				rightFactory.createBufferedQueryIterator(), opSimJoin.getLeftAttributes(), opSimJoin.getRightAttributes());
+		Map<Expr, PairOfSameType<Number>> condensedMinMax = condense(minMax);
+		opSimJoin.setNormMap(condensedMinMax);
+		return QueryIterSimJoin.create(leftFactory.createBufferedQueryIterator(), rightFactory.createBufferedQueryIterator(), opSimJoin, execCxt);
 	}
 
 	private static Map<Expr, PairOfSameType<Number>> condense(
