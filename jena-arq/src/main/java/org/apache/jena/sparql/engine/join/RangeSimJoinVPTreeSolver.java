@@ -35,9 +35,6 @@ public class RangeSimJoinVPTreeSolver extends RangeSimJoinSolver {
 		for (VPVector<Binding> r : res) {
 			Binding b = r.getKey();
 			double d = fun.getDistance(query, r);
-			if (d==0) {
-				continue;
-			}
 			cache.add(new Pair<Pair<Binding, Binding>, Double>(new Pair<Binding, Binding>(l, b), d));
 		}
 	}

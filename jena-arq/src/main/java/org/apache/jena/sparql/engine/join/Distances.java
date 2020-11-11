@@ -45,10 +45,10 @@ public class Distances {
 				for (int i = 0; i < p1.size(); i++) {
 					Node n1 = p1.get(i);
 					Node n2 = p2.get(i);
-					double maxX = minMax.get(leftExpr.get(i)).getRight().doubleValue();
-					double minX = minMax.get(leftExpr.get(i)).getLeft().doubleValue();
-					double x = (((Number) n1.getLiteralValue()).doubleValue() - minX)/(maxX-minX);
-					double y = (((Number) n2.getLiteralValue()).doubleValue() - minX)/(maxX-minX);
+					//double maxX = minMax.get(leftExpr.get(i)).getRight().doubleValue();
+					//double minX = minMax.get(leftExpr.get(i)).getLeft().doubleValue();
+					double x = (((Number) n1.getLiteralValue()).doubleValue()); //- minX)/(maxX-minX);
+					double y = (((Number) n2.getLiteralValue()).doubleValue()); //- minX)/(maxX-minX);
 					
 					d += (x-y)*(x-y);
 				}

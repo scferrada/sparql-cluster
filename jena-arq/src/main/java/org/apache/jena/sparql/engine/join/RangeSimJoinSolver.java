@@ -18,15 +18,16 @@ public abstract class RangeSimJoinSolver extends SimJoinSolver {
 	
 	@Override
 	public Binding nextBinding() {
-		if (cache.isEmpty() && simjoin.getLeft().hasNext()) {
-			getNextBatch(simjoin.getLeft().nextBinding());
-		}
 		Pair<Pair<Binding, Binding>, Double> next = cache.poll();
+		//System.out.println(next);
 		return consolidateRange(next);
 	}
 
 	@Override
 	public boolean hasNextBinding() {
-		return (!cache.isEmpty()) || simjoin.getLeft().hasNext();
+		while (cache.isEmpty() && simjoin.getLeft().hasNext()) {
+			getNextBatch(simjoin.getLeft().nextBinding());
+		}
+		return !cache.isEmpty();
 	}
 }
